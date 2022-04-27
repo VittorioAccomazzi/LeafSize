@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/leafsize/static/css/main.fd426d7a.css",
+    "main.js": "/leafsize/static/js/main.b869ff62.js",
+    "static/media/dish-4-leaf-1.svg": "/leafsize/static/media/dish-4-leaf-1.c38c032896c9244550b1d6e252cfa770.svg",
+    "static/media/dish-1-leaf-2.svg": "/leafsize/static/media/dish-1-leaf-2.d37ce0e840a6e68ada6359a0bccb47c8.svg",
+    "static/media/dish-1-leaf-1.svg": "/leafsize/static/media/dish-1-leaf-1.e50f25ff60f8079256a25be941752ab4.svg",
+    "index.html": "/leafsize/index.html",
+    "main.fd426d7a.css.map": "/leafsize/static/css/main.fd426d7a.css.map",
+    "main.b869ff62.js.map": "/leafsize/static/js/main.b869ff62.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fd426d7a.css",
+    "static/js/main.b869ff62.js"
+  ]
+}
