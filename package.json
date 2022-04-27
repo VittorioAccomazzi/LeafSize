@@ -1,0 +1,55 @@
+{
+  "name": "leafmeasurements",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.6.1",
+    "@mui/material": "^5.6.1",
+    "@reduxjs/toolkit": "^1.8.1",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.20.47",
+    "@types/react": "^18.0.3",
+    "@types/react-dom": "^18.0.0",
+    "@types/react-redux": "^7.1.23",
+    "@types/ua-parser-js": "^0.7.36",
+    "@types/wicg-file-system-access": "^2020.9.5",
+    "react": "^18.0.0",
+    "react-device-detect": "^2.2.2",
+    "react-dom": "^18.0.0",
+    "react-redux": "^7.2.8",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "typescript": "~4.1.5",
+    "ua-parser-js": "^1.0.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.0.1",
+    "@testing-library/user-event": "^14.1.0",
+    "canvas": "^2.9.1",
+    "image-hash": "^5.0.2"
+  }
+}

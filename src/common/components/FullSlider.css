@@ -1,0 +1,17 @@
+.resultLabel {
+    border: 1px;
+    border-color: lightgray;
+    border-style: solid;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: lightgray;
+    min-width: 12em;
+    max-width: 12em;
+}
+
+.titleLabel {
+    width:8em;
+    text-align: right;
+}
