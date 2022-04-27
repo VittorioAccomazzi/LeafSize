@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { setHue, setSaturation } from '../settingSlice';
 import FullSlider from '../../../common/components/FullSlider';
+import { processingPath, selectionPath, settingsPath } from "../../../app/const";
 
 interface SettingPartProp {
     disabled : boolean,
@@ -51,7 +52,7 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
             />
             <Stack direction='row' spacing={10}>
                 <PreviousPage 
-                    page="/" 
+                    page={selectionPath}
                     disabled={disabled} 
                 />
                 <Button 
@@ -62,7 +63,7 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
                     Process
                 </Button>
                 <NextPage 
-                    page="/process" 
+                    page={processingPath} 
                     disabled={disabled}
                 />
             </Stack>

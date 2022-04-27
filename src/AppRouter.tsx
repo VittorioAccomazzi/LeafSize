@@ -8,10 +8,12 @@ export default function () {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Selection/>}/>
-                <Route path="settings" element={<Settings/>}/>
-                <Route path="process" element={<Process/>}/>
-                <Route path="result" element={<Result/>}/>
+                <Route path="/LeafSize">
+                    <Route path="" element={<Selection/>}/>
+                    <Route path="settings" element={<Settings/>}/>
+                    <Route path="process" element={<Process/>}/>
+                    <Route path="result" element={<Result/>}/>
+                </Route>
             </Routes>
         </BrowserRouter>
     )

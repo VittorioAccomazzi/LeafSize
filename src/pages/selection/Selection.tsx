@@ -9,6 +9,7 @@ import dish1Leaf1  from '../../assets/dish-1-leaf-1.svg';
 import dish1Leaf2  from '../../assets/dish-1-leaf-2.svg';
 import OptionsList from "../../common/components/OptionList";
 import isImage from "../../common/utils/FileUtils";
+import { settingsPath } from "../../app/const";
 
 
 export default function Selection() {
@@ -63,7 +64,7 @@ export default function Selection() {
                         title="Select Number of leafs per dish" />
                 </Stack>   
             </Box>
-            <NextPage page="/settings" disabled={loading || files==null || files.length===0}/>
+            <NextPage page={settingsPath} disabled={loading || files==null || files.length===0}/>
         </>
     )
 }
