@@ -6,13 +6,14 @@ import { useMemo } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { setHue, setSaturation } from '../settingSlice';
 import FullSlider from '../../../common/components/FullSlider';
-import { processingPath, selectionPath, settingsPath } from "../../../app/const";
+import { processingPath, selectionPath } from "../../../app/const";
 
 interface SettingPartProp {
     disabled : boolean,
     imageList: string [],
     imageChange : (imageNum:number) =>void,
-    process : ()=>void
+    process : ()=>void,
+    isAutoProc : boolean
 }
 
 const minHue = 50;
@@ -23,7 +24,7 @@ const maxSat = 150;
 const defSat = 91;
 const generateArray = ( min : number, max:number ) => Array(max-min+1).fill(0).map((v,i)=>`${i+min}`)
 
-export default function SettingPart({disabled, imageChange: imageChanges, process, imageList} : SettingPartProp ) {
+export default function SettingPart({disabled, imageChange: imageChanges, process, imageList, isAutoProc} : SettingPartProp ) {
     const hueArray = useMemo<string[]>(()=>generateArray(minHue,maxHue),[]);
     const saturationArray = useMemo<string[]>(()=>generateArray(minSat,maxSat),[]);
     const dispatch  = useAppDispatch();
@@ -60,6 +61,7 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
                     disabled={disabled}
                     onClick={process}
                 >
+                    { isAutoProc ? '⚡️ ': '' }
                     Process
                 </Button>
                 <NextPage 

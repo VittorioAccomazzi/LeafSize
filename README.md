@@ -17,6 +17,8 @@ how to use it high level
 
 describe + add picture
 
+<img src="assets/SampleImage.jpg" width="1024" />
+
 ## Output
 describe 
 

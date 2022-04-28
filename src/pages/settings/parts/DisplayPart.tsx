@@ -15,7 +15,6 @@ interface CanvasSize { width : number, height : number }
 export default function DisplayPart({ imageData }:DisplayPartProp) {
     const canvas = useRef<HTMLCanvasElement | null>(null)
     const mainDiv= useRef<HTMLDivElement|null>(null)
-    const [canvasSize, setCanvasSize] = useState<CanvasSize>({width:1, height:1})
 
     // update the canvas when index changes
     useEffect( ()=> {
@@ -26,12 +25,11 @@ export default function DisplayPart({ imageData }:DisplayPartProp) {
                 canvas.current.height= height;
                 const ctx = canvas.current.getContext('2d');
                 ctx?.putImageData(imageData,0,0);
-                setCanvasSize({ width : imageData.width, height : imageData.height} );
             }
-    },[imageData, setCanvasSize])
+    },[imageData])
 
     const pzMatrix = usePanZoom(mainDiv,[mainDiv])
-    let cpMatrix = useCenterPos(canvas, mainDiv, [canvasSize.width, canvasSize.height])
+    let cpMatrix = useCenterPos(canvas, mainDiv, [imageData?.width, imageData?.height])
     cpMatrix.preMultiplySelf(pzMatrix)
 
     return (

@@ -58,6 +58,7 @@ export default function Settings() {
                     disabled={isLoading} 
                     imageChange={(index)=>iNumPacer.delayAction(()=>loadData(index))} 
                     process={process} 
+                    isAutoProc ={shiftPress}
                 />
             </Box>
             <Box className="bottomFrame">
