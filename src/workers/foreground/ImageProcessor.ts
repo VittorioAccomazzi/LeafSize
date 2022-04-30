@@ -1,15 +1,16 @@
 import ImageLoader from "./ImageLoader";
 import LeafSeg from "../background/LeafSeg";
-import LeafRes from "./LeafRes";
 import BoundingBox from "../../common/imgLib/BoundingBox";
 
 
-export type ProcessProgress = ( num : number, total : number, item?: LeafRes) => void
+export type ProcessProgress = ( num : number, total : number) => void
 export interface Leaf {
     imageData : ImageData,
     areas : number[] 
 }
 const dilation = 25;
+const minWidth = 256;
+const minHeight= 256;
 
 export default class ImageProcessor {
 
@@ -39,7 +40,11 @@ export default class ImageProcessor {
         let leafData  : ImageData = imageData!;
         let leafAreas : number [] = [];
         if( !BoundingBox.IsEmpty(box) ){
-            const dBox = BoundingBox.Dilate(box, dilation, dilation);
+            let wDilation = dilation;
+            let hDilation = dilation;
+            if( box.size.width < minWidth ) wDilation = Math.max(wDilation, ( minWidth-box.size.width)/2|0);
+            if( box.size.height< minHeight) hDilation = Math.max(hDilation, ( minHeight-box.size.height)/2|0);
+            const dBox = BoundingBox.Dilate(box, wDilation, hDilation);
             leafData = BoundingBox.CropImage(dBox, imageData!)!;
             leafAreas= areas.map(v=>(v/(scale*scale)|0));
         }

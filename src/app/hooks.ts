@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { root } from './const';
 import type { RootState, AppDispatch } from './store';
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
@@ -11,6 +12,6 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const useAutomaticRedirect = (files : FileSystemFileHandle []|null ) => {
     const navigate = useNavigate();
     useEffect(()=> {
-        if(!(files?.length)) navigate('/')
+        if(!(files?.length)) navigate(root)
     }, []) 
 }

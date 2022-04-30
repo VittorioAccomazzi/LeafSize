@@ -3,7 +3,7 @@ import  css from './Process.module.css'
 import PreviousPage from "../../common/components/NavButtons";
 import { NextPage } from "../../common/components/NavButtons";
 import { imageSize, resultPath, settingsPath } from "../../app/const";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAutomaticRedirect } from "../../app/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ImageLoader from "../../workers/foreground/ImageLoader";
 
@@ -29,6 +29,9 @@ export default function Process() {
             numLeaf
          ),[])
 
+        // if nothing selected redirect on seletion page.
+        useAutomaticRedirect(fileList);
+
          // dispose the image processor when we exit this page.
          useEffect(()=>{
             return ()=>imgProcessor.dispose();
@@ -37,6 +40,8 @@ export default function Process() {
          const onDelete = (name:string)=>{
 
          }
+
+
 
     return (
         <Box className={css.fullPage} >

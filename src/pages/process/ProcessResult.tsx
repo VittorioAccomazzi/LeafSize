@@ -1,11 +1,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import ImageProcessing, {Leaf} from '../../workers/foreground/ImageProcessor'
-import loading from '../../assets/loading.gif'
 import useMouseOver from "../../common/useLib/useMouseOver";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box, Button } from "@mui/material";
-import AreaInfo from "./Areainfo";
+import AreaInfo from "./AreaInfo";
 import css from './Process.module.css'
 
 export interface ProcessResultProp {
@@ -45,7 +44,6 @@ export default function ProcessResult ( { name, imageProcessor, onDelete } : Pro
         <Box className={css.resultMainBox}>
             <div className={css.resultInnerDiv} hidden={hide} ref={root} >
                 <canvas ref={canvas} hidden={!ready}/>
-                <img src={loading} hidden={ready} />
                 <div className={css.resultInfoArea} hidden={!overlayDisplay}>
                     <AreaInfo areas={areas}/>
                 </div>
