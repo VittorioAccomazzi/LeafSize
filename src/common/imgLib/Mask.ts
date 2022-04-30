@@ -1,4 +1,7 @@
-import IImage, {Colour, Point} from './Types'
+import { listenerCount } from 'process';
+import { useInRouterContext } from 'react-router-dom';
+import BoundingBox from './BoundingBox';
+import IImage, {Bbox, Colour, Point} from './Types'
 
 export function isMask( obj : any ) : obj is Mask {
     return obj.constructor.name === "Mask"
@@ -271,7 +274,7 @@ export default class Mask implements IImage<boolean> {
     /**
      * dermine the boundaies of the bask
      */
-    Boundaries() :  { ulc : Point, lrc : Point } {
+    Boundaries() :  Bbox {
         let xMin = this.width;
         let yMin = this.height;
         let xMax = 0;
@@ -286,10 +289,7 @@ export default class Mask implements IImage<boolean> {
             }
         })
 
-        return {
-            ulc : {x:xMin, y:yMin},
-            lrc : {x:xMax, y:yMax}
-        }
+        return BoundingBox.FromValues(xMin, yMin, xMax+1, yMax+1);
     }
 
     private checkSize( x : number, y: number ){

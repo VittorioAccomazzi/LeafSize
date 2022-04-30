@@ -1,9 +1,13 @@
-import {Canvas, loadImage} from 'canvas';
+import {Canvas, loadImage, ImageData} from 'canvas';
 import CanvasUtils from './CanvasUtils';
 import {imageHash} from 'image-hash';
+import {ImageDataAllocator} from '../imgLib/Types'
 import * as fs from 'fs';
 import * as path from 'path'
 
+export const nodeCanvasImageDataAllocator  : ImageDataAllocator = ( data : Uint8ClampedArray, width : number, height : number ) : ImageData =>{
+    return new ImageData(data, width, height);
+}
 
 export default async function hash( image : Canvas | HTMLCanvasElement, imageName : string ) : Promise<string> {
     const canvas = isCanvas(image) ? image : CanvasUtils.fromHTML(image) ;

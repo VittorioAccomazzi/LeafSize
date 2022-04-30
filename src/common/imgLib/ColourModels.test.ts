@@ -1,17 +1,11 @@
-import ColourModels, {ImageDataAllocator}  from "./ColourModels";
+import ColourModels  from "./ColourModels";
 import CanvasUtils from "../utils/CanvasUtils";
 import {Canvas} from 'canvas'
-import hash, { loadCanvas, testImage } from "../utils/TestUtils";
-import {ImageData} from 'canvas';
-
+import hash, { loadCanvas, testImage, nodeCanvasImageDataAllocator } from "../utils/TestUtils";
 
 describe('ColourModels', ()=>{
 
-    const imageDataAllocator  : ImageDataAllocator = ( data : Uint8ClampedArray, width : number, height : number ) : ImageData =>{
-        return new ImageData(data, width, height);
-    }
-
-    ColourModels.SetImageDataAllocator(imageDataAllocator);
+    ColourModels.SetImageDataAllocator(nodeCanvasImageDataAllocator);
 
     test('shall decompose RGB colour in HSV', ()=>{
         let width = 16

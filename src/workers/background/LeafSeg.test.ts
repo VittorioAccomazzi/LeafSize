@@ -43,7 +43,7 @@ describe('LeafSeg',()=>{
 
         for( const [idx, name] of imgLoader.List.entries() ){
             const { scale, imageData } = await imgLoader.getImage(idx);
-            const areas = await LeafSeg.Process(imageData!, hueThr, satThr, 2);
+            const {areas} = await LeafSeg.Process(imageData!, hueThr, satThr, 2);
             CanvasUtils.PutImageData(htmlCnv,imageData!);
             const hsh     = await hash(htmlCnv, name );
             areas.forEach((area,index)=>{

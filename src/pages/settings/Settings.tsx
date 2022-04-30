@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
-import './Settings.css'
+import css from './Settings.module.css'
 import SettingPart from "./parts/SettingsPart";
 import DisplayPart from "./parts/DisplayPart";
 import ImageLoader from "../../workers/foreground/ImageLoader";
@@ -10,10 +10,10 @@ import { selectFiles, selectNumDishes, selectNumLeafs } from "../selection/selec
 import LeafSeg from "../../workers/background/LeafSeg";
 import { selectHue, selectSaturation } from "./settingSlice";
 import useShiftKey from "../../common/useLib/useKeyPress";
+import { imageSize } from "../../app/const";
 
 
 const delay = 200; // ms to wait for the user to complete the action prior to load the image
-const imageSize=1024;
 
 export default function Settings() {
     const fileList = useAppSelector(selectFiles);
@@ -34,10 +34,9 @@ export default function Settings() {
     useAutomaticRedirect(fileList);
 
     const loadData = async ( index : number ) => {
-        const { scale, imageData } = await imgLoader.getImage(index);
+        const { imageData } = await imgLoader.getImage(index);
         setImageData(imageData);
         setOrgData(imageData);
-        if( shiftPress ) process();
     }
 
     const process = async () =>{
@@ -50,18 +49,22 @@ export default function Settings() {
         }
     }
 
+    useEffect(()=>{
+        if( shiftPress ) process();
+    },[orgData])
+
     return (
         <Box className="fullPage" >
-            <Box className="topFrame">
+            <Box className={css.topFrame}>
                 <SettingPart 
                     imageList={imageList}
                     disabled={isLoading} 
-                    imageChange={(index)=>iNumPacer.delayAction(()=>loadData(index))} 
+                    imageChange={(index)=> iNumPacer.delayAction(()=>loadData(index))} 
                     process={process} 
                     isAutoProc ={shiftPress}
                 />
             </Box>
-            <Box className="bottomFrame">
+            <Box className={css.bottomFrame}>
                 <DisplayPart
                     imageData={imageData}
                 />

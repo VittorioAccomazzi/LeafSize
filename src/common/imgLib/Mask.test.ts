@@ -2,8 +2,9 @@ import Mask, { isMask } from './Mask';
 import {Point} from './Types';
 import {ImageFactory, isImage} from './ImageBase';
 import CanvasUtils from '../utils/CanvasUtils';
-import hash, { loadCanvas, testImage } from '../utils/TestUtils';
+import hash, { loadCanvas, testImage, nodeCanvasImageDataAllocator } from '../utils/TestUtils';
 import ColourModels from './ColourModels';
+import BoundingBox from './BoundingBox';
 
 
 describe('Mask', ()=>{
@@ -333,9 +334,10 @@ describe('Mask', ()=>{
     })
 
     test('Shall determine the bounding box', async()=>{
+        BoundingBox.SetImageDataAllocator(nodeCanvasImageDataAllocator);
         const canvas = await loadCanvas(testImage,12);
         const imgData= CanvasUtils.GetImageData(canvas);
-        const {hue, sat } = ColourModels.toHSV(imgData);
+        const { sat } = ColourModels.toHSV(imgData);
         const mask = new Mask(sat.width, sat.height);
         const maskPixels = mask.imagePixels;
         const thr = 90/255;
@@ -348,10 +350,15 @@ describe('Mask', ()=>{
         const ctx = canvas.getContext('2d');
         ctx.strokeStyle = "#FF0000";
         ctx.beginPath()
-        ctx.rect(bbx.ulc.x, bbx.ulc.y, bbx.lrc.x-bbx.ulc.x, bbx.lrc.y-bbx.ulc.y);
+        ctx.rect(bbx.ulc.x, bbx.ulc.y, bbx.size.width, bbx.size.height);
         ctx.stroke();
-        const hsh = await hash(canvas,'bounding box');
-        expect(hsh).toMatchSnapshot();
+        const hsh1 = await hash(canvas,'bounding box');
+        expect(hsh1).toMatchSnapshot();
+        const dbx=BoundingBox.Dilate(bbx, 5, 5);
+        const crpData = BoundingBox.CropImage(dbx, imgData);
+        CanvasUtils.PutImageData(canvas,crpData!);
+        const hsh2 = await hash(canvas,'bounding box cropped');
+        expect(hsh2).toMatchSnapshot();
     })
 })
 

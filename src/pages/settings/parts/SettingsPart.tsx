@@ -1,5 +1,5 @@
 import { Button, Stack } from "@mui/material";
-import '../Settings.css'
+import css from '../Settings.module.css'
 import PreviousPage from "../../../common/components/NavButtons";
 import { NextPage } from "../../../common/components/NavButtons";
 import { useMemo } from "react";
@@ -30,7 +30,7 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
     const dispatch  = useAppDispatch();
     
     return (
-        <Stack className="settigsPart" spacing={2} paddingTop={2} paddingBottom={5} overflow='hidden'>
+        <Stack className={css.settigsPart} spacing={2} paddingTop={2} paddingBottom={5} overflow='hidden'>
             <FullSlider
                 label="Image Selection"
                 values={imageList}

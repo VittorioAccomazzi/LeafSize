@@ -1,14 +1,7 @@
 import { ImageFactory, ImageFloat32, ImageUint8 } from "./ImageBase";
+import { ImageDataAllocator, imageDataAllocator } from "./Types";
 
-/* unfortunately this is necesary in order to deal with the jest dom, which doesn't support the
- * ImageData object and the browser dom.
- */
 
-export type ImageDataAllocator = ( data : Uint8ClampedArray, width : number, height : number ) => ImageData;
-
-const imageDataAllocator = ( data : Uint8ClampedArray, width : number, height : number ) : ImageData =>{
-    return new ImageData(data, width, height);
-}
 
 export default class ColourModels {
     static allocator = imageDataAllocator;

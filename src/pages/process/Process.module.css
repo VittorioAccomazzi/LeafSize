@@ -1,0 +1,57 @@
+.fullPage {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.topFrame {
+    position: absolute;
+    top:0px;
+    left: 0px;
+    right: 0px;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bottomFrame {
+    position:  absolute;
+    top:2em;
+    left:0px;
+    right:0px;
+    bottom: 0px;
+    background-color: gray;
+}
+
+.resultMainBox {
+    display: flex;
+    align-items: center;
+}
+
+.resultInnerDiv {
+    position: relative;
+    width: fit-content;
+}
+
+.resultInfoArea {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+.resultDeleteIconShow {
+    position: absolute !important;
+    top: 0px !important;
+    right: 0px !important;
+    display: block !important
+}
+
+.resultDeleteIconHidden {
+    display:none !important
+}
+
+.areaInfoMain {
+    font-size: small !important;
+    text-shadow: 2px 2px gray;
+}

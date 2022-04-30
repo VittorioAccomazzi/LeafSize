@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import '../Settings.css'
-import { useRef, useState } from "react";
+import css from '../Settings.module.css'
+import { useRef } from "react";
 import { useEffect } from "react";
 import useCenterPos from "../../../common/useLib/useCenterPos";
 import usePanZoom from "../../../common/useLib/usePanZoom";
@@ -9,8 +9,6 @@ import { ImageData } from "canvas";
 interface DisplayPartProp {
     imageData : ImageData | null
 }
-
-interface CanvasSize { width : number, height : number }
 
 export default function DisplayPart({ imageData }:DisplayPartProp) {
     const canvas = useRef<HTMLCanvasElement | null>(null)
@@ -33,7 +31,7 @@ export default function DisplayPart({ imageData }:DisplayPartProp) {
     cpMatrix.preMultiplySelf(pzMatrix)
 
     return (
-        <Box className="displayPart" ref={mainDiv} >
+        <Box className={css.displayPart} ref={mainDiv} >
             <canvas ref={canvas} className="mainCanvas" style={{ display:"block", transformOrigin: "0px 0px",  transform: cpMatrix.toString() }}/>
         </Box>
     )
