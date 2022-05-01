@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { ImageFinalized, selectFinalized } from '../pages/process/ProcessSlice';
 import { root } from './const';
 import type { RootState, AppDispatch } from './store';
 
@@ -14,4 +15,14 @@ export const useAutomaticRedirect = (files : FileSystemFileHandle []|null ) => {
     useEffect(()=> {
         if(!(files?.length)) navigate(root)
     }, []) 
+}
+
+
+// simple hook to select the images which still need processing from the store.
+
+const searchElement = ( list : ImageFinalized [], name : string ) : boolean => list.findIndex(el=>el.name===name) >= 0
+export const  useImagesToProcess = ( imageList : string [] ) => {
+    const imgFinalized = useAppSelector(selectFinalized);
+    const imagesToProcess = useMemo(()=>imageList.filter( v => !searchElement(imgFinalized,v) ) , []); // on purpose this shall be computed only once.
+    return imagesToProcess;
 }

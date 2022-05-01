@@ -24,6 +24,15 @@
     background-color: gray;
 }
 
+.progressBar {
+    width: 512px;
+    height: 16px !important;
+}
+
+.hidden {
+    display:none !important
+}
+
 .resultMainBox {
     display: flex;
     align-items: center;
@@ -47,9 +56,7 @@
     display: block !important
 }
 
-.resultDeleteIconHidden {
-    display:none !important
-}
+
 
 .areaInfoMain {
     font-size: small !important;

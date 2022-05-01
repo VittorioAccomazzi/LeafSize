@@ -11,7 +11,7 @@ import { processingPath, selectionPath } from "../../../app/const";
 interface SettingPartProp {
     disabled : boolean,
     imageList: string [],
-    imageChange : (imageNum:number) =>void,
+    imageChange : (imageName:string) =>void,
     process : ()=>void,
     isAutoProc : boolean
 }
@@ -34,7 +34,7 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
             <FullSlider
                 label="Image Selection"
                 values={imageList}
-                onChange={(index,val)=>{imageChanges(index)}}
+                onChange={(index,val)=>{imageChanges(val)}}
                 disabled={disabled}
             />
             <FullSlider

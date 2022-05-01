@@ -1,11 +1,13 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Stack, Typography } from "@mui/material";
 import  css from './Process.module.css'
 import PreviousPage from "../../common/components/NavButtons";
 import { NextPage } from "../../common/components/NavButtons";
 import { imageSize, resultPath, settingsPath } from "../../app/const";
-import { useAppSelector, useAutomaticRedirect } from "../../app/hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAppDispatch, useAppSelector, useAutomaticRedirect, useImagesToProcess } from "../../app/hooks";
+import { useEffect, useMemo, useState } from "react";
 import ImageLoader from "../../workers/foreground/ImageLoader";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import {addImagesToFinalized, ImageFinalized, selectFinalized} from './ProcessSlice'
 
 import { selectFiles, selectNumDishes, selectNumLeafs } from "../selection/selectionSlice";
 import { selectHue, selectSaturation } from "../settings/settingSlice";
@@ -18,12 +20,18 @@ export default function Process() {
     const huethr   = useAppSelector(selectHue);
     const satThr   = useAppSelector(selectSaturation);
     const numLeaf  = useAppSelector(selectNumLeafs);
+    const dispatch  = useAppDispatch();
+    const imgFinalized = useAppSelector(selectFinalized);
     const [perc, setPerc] = useState<number>(0)
+    const [finalized, setFinalized] = useState<ImageFinalized[]>([]);
+    const [isFinalized, setIsFinalized] = useState<boolean>(false);
     const imgLoader= useMemo<ImageLoader>(()=>new ImageLoader(fileList, numDishes, imageSize),[fileList, numDishes]);
     const progress = (done : number, total : number )=> setPerc((100*done/total)|0);
+    const imagesToProcess = useImagesToProcess(imgLoader.List); 
     const imgProcessor = useMemo<ImageProcessor>(()=>new ImageProcessor(
             imgLoader,
             progress, 
+            imagesToProcess.length,
             huethr, 
             satThr,
             numLeaf
@@ -37,24 +45,58 @@ export default function Process() {
             return ()=>imgProcessor.dispose();
          },[imgProcessor])
 
+         // images which segmentation has been rejected.
          const onDelete = (name:string)=>{
-
+            const index = finalized.findIndex(v=>v.name===name);
+            if( index >= 0 ) {
+                finalized.splice(index, 1);
+                setFinalized([...finalized])
+            }
          }
 
+         // images result.
+         const onResult = (name: string, areas : number [] ) => {
+            const item = { name, areas };
+            setFinalized((state)=>[...state,item])
+         }
 
+         // finalize all the result in the local state : push them in the application store
+         // and disable further modification.
+         const onFinalze = ()=>{
+            setIsFinalized(true);
+            dispatch(addImagesToFinalized(finalized));
+         }
 
+         const nImagesToReview = imgLoader.List.length - imgFinalized.length;
     return (
         <Box className={css.fullPage} >
             <Box className={css.topFrame}>
-                <Stack direction='row' spacing={10}>
-                    <PreviousPage page={settingsPath} />
-                     processing {perc}%
-                    <NextPage  page={resultPath} />
+                <Stack direction='row' spacing={10} alignItems='center'>
+                    <PreviousPage 
+                        page={settingsPath} 
+                        disabled = { nImagesToReview == 0 } 
+                    />
+                    <LinearProgress 
+                        variant='determinate' 
+                        value={perc} 
+                        className={ perc < 100 ? css.progressBar : css.hidden} 
+                    />
+                    <Button 
+                        variant='outlined' 
+                        className={ perc < 100 ? css.hidden :''} 
+                        onClick = {onFinalze}
+                        disabled={isFinalized}> 
+                            <CheckBoxIcon/> Finalize 
+                    </Button>
+                    <NextPage  
+                        page={resultPath} 
+                        disabled = {imgFinalized.length == 0} 
+                    />
                 </Stack>
             </Box>
             <Box className={css.bottomFrame} overflow='scroll' display='flex' flexDirection='row' flexWrap='wrap' justifyContent='center' >
                 {
-                    imgLoader.List.map(el => <ProcessResult name = {el} imageProcessor={imgProcessor} key={el} onDelete={onDelete} />)
+                    imagesToProcess.map(el => <ProcessResult name = {el} imageProcessor={imgProcessor} key={el} onDelete={onDelete} onResult={onResult} allowDelete={!isFinalized}/>)
                 }
             </Box>
         </Box>

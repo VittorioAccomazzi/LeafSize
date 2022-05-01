@@ -21,13 +21,15 @@ export default class ImageProcessor {
     private nLeafs : number;
     private isDisposed : boolean = false;
     private numDone : number;
+    private nProcess: number;
 
-    constructor( imageLoader : ImageLoader, progress : ProcessProgress, hueThr : number, satThr : number, nLeafs : number ){
+    constructor( imageLoader : ImageLoader, progress : ProcessProgress, nProcess : number, hueThr : number, satThr : number, nLeafs : number ){
         this.imageLoader = imageLoader;
         this.progress = progress;
         this.hueThr = hueThr;
         this.satThr = satThr;
         this.nLeafs = nLeafs;
+        this.nProcess= nProcess;
         this.numDone= 0;
     }
 
@@ -49,7 +51,7 @@ export default class ImageProcessor {
             leafAreas= areas.map(v=>(v/(scale*scale)|0));
         }
         this.numDone++;
-        this.progress(this.numDone, this.imageLoader.List.length);
+        this.progress(this.numDone, this.nProcess);
         return {
             imageData : leafData,
             areas : leafAreas

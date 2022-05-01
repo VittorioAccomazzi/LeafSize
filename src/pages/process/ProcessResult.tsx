@@ -10,9 +10,11 @@ import css from './Process.module.css'
 export interface ProcessResultProp {
     name : string,
     imageProcessor : ImageProcessing,
-    onDelete : (name:string)=>void
+    onDelete : (name:string)=>void,
+    onResult : (name:string, areas: number[] ) =>void,
+    allowDelete : boolean
 }
-export default function ProcessResult ( { name, imageProcessor, onDelete } : ProcessResultProp) {
+export default function ProcessResult ( { name, imageProcessor, onDelete, onResult, allowDelete } : ProcessResultProp) {
     const canvas = useRef<HTMLCanvasElement | null>(null)   
     const root = useRef<HTMLDivElement | null>(null)   
     const [ready, setReady] = useState<boolean>(false);
@@ -31,6 +33,7 @@ export default function ProcessResult ( { name, imageProcessor, onDelete } : Pro
                     ctx!.putImageData(imageData, 0, 0)
                     setAreas(areas);
                     setReady(true);
+                    onResult(name, areas);
                 }
             })
     },[imageProcessor])
@@ -47,7 +50,7 @@ export default function ProcessResult ( { name, imageProcessor, onDelete } : Pro
                 <div className={css.resultInfoArea} hidden={!overlayDisplay}>
                     <AreaInfo areas={areas}/>
                 </div>
-                <Button  className={overlayDisplay ? css.resultDeleteIconShow : css.resultDeleteIconHidden} onClick={onClick} >
+                <Button  className={( overlayDisplay && allowDelete )? css.resultDeleteIconShow : css.hidden} onClick={onClick} >
                     <DeleteForeverIcon color='error' fontSize="large" />
                 </Button> 
             </div>

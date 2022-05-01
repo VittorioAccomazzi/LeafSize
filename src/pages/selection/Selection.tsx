@@ -10,6 +10,7 @@ import dish1Leaf2  from '../../assets/dish-1-leaf-2.svg';
 import OptionsList from "../../common/components/OptionList";
 import isImage from "../../common/utils/FileUtils";
 import { settingsPath } from "../../app/const";
+import { clearImagesFinalized } from "../process/ProcessSlice";
 
 
 export default function Selection() {
@@ -29,6 +30,7 @@ export default function Selection() {
         }
         dispatch(setFolder(dirHandle));
         dispatch(setFiles(files));
+        dispatch(clearImagesFinalized());
         setLoading(false);
     }
     return (

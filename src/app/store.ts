@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import selectionReducer from '../pages/selection/selectionSlice';
 import settingsReducer from '../pages/settings/settingSlice'
+import finalizedReducer from '../pages/process/ProcessSlice'
 
 export const store = configureStore({
   reducer: {
-    selection : selectionReducer,
-    settings : settingsReducer
+    selection: selectionReducer,
+    settings : settingsReducer,
+    finalized: finalizedReducer
   },
   // 🖐 The following line are necessary since we store FileSystemHandle and FileSystemDirectoryHandle
   // in teh Redux store. These classes are not serializable by javascript right now, but they are by
