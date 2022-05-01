@@ -14,7 +14,7 @@ const initialState : FinalizedState = {
     images : []
 }
 
-export const  finalizeSlice = createSlice ({
+export const  processSlice = createSlice ({
     name : 'finalized',
     initialState,
     reducers : {
@@ -28,9 +28,9 @@ export const  finalizeSlice = createSlice ({
 })
 
 // Reducers
-export const {addImagesToFinalized, clearImagesFinalized} = finalizeSlice.actions;
+export const {addImagesToFinalized, clearImagesFinalized} = processSlice.actions;
 
 // selectors
 export const selectFinalized = ( state : RootState )=> state.finalized.images;
 
-export default finalizeSlice.reducer;
+export default processSlice.reducer;

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+import { AppThunk, RootState } from '../../app/store';
+import {clearImagesFinalized} from '../process/ProcessSlice'
 
 export interface SelectionState {
     numDishes : number;
@@ -22,10 +23,10 @@ export const  selectionSlice = createSlice ({
         setNumDishes : (state, action : PayloadAction<number>) =>{
             state.numDishes = action.payload;
         },
-        setNumLeafs : ( state, action : PayloadAction<number>) => {
+        setNumLeafs: ( state, action : PayloadAction<number>) => {
             state.numLeafs = action.payload;
         },
-        setFolder : ( state, action : PayloadAction<FileSystemDirectoryHandle>) =>{
+        setFolder: ( state, action : PayloadAction<FileSystemDirectoryHandle>) =>{
             state.folder = action.payload;
             state.files = [];
         },
@@ -35,8 +36,34 @@ export const  selectionSlice = createSlice ({
     }
 })
 
-// Reducers
-export const { setNumDishes, setNumLeafs, setFolder, setFiles } = selectionSlice.actions;
+// all the reducers here need to clear the result, if any.
+export const setNumDishes = (num: number): AppThunk => (
+    dispatch
+  ) => {
+      dispatch(selectionSlice.actions.setNumDishes(num));
+      dispatch(clearImagesFinalized())
+  }
+
+  export const setNumLeafs = ( num : number ): AppThunk => (
+    dispatch
+  ) => {
+      dispatch(selectionSlice.actions.setNumLeafs(num));
+      dispatch(clearImagesFinalized())
+  }
+
+  export const setFolder = ( folder: FileSystemDirectoryHandle ): AppThunk => (
+    dispatch
+  ) => {
+      dispatch(selectionSlice.actions.setFolder(folder));
+      dispatch(clearImagesFinalized())
+  }
+
+  export const setFiles = ( files: FileSystemFileHandle [] ): AppThunk => (
+    dispatch
+  ) => {
+      dispatch(selectionSlice.actions.setFiles(files));
+      dispatch(clearImagesFinalized())
+  }
 
 // selectors
 export const selectNumDishes= ( state: RootState ) => state.selection.numDishes;
