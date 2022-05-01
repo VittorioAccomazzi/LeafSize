@@ -1,0 +1,32 @@
+.fullPage {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.topFrame {
+    position: absolute;
+    top:0px;
+    left: 0px;
+    right: 0px;
+    height: 3em;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bottomFrame {
+    position: absolute;
+    top:3em;
+    width: 100%;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 12px;
+}
+
+.tableContainer {
+   width:512px !important;
+}

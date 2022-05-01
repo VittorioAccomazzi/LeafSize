@@ -1,4 +1,4 @@
-import { Box, Button, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, Button, LinearProgress, Stack } from "@mui/material";
 import  css from './Process.module.css'
 import PreviousPage from "../../common/components/NavButtons";
 import { NextPage } from "../../common/components/NavButtons";
@@ -74,7 +74,7 @@ export default function Process() {
                 <Stack direction='row' spacing={10} alignItems='center'>
                     <PreviousPage 
                         page={settingsPath} 
-                        disabled = { nImagesToReview == 0 } 
+                        disabled = { nImagesToReview === 0 } 
                     />
                     <LinearProgress 
                         variant='determinate' 
@@ -86,11 +86,11 @@ export default function Process() {
                         className={ perc < 100 ? css.hidden :''} 
                         onClick = {onFinalze}
                         disabled={isFinalized}> 
-                            <CheckBoxIcon/> Finalize 
+                            <CheckBoxIcon/> Accept 
                     </Button>
                     <NextPage  
                         page={resultPath} 
-                        disabled = {imgFinalized.length == 0} 
+                        disabled = {imgFinalized.length === 0} 
                     />
                 </Stack>
             </Box>
