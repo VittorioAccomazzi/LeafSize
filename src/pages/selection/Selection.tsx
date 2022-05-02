@@ -11,6 +11,7 @@ import OptionsList from "../../common/components/OptionList";
 import isImage from "../../common/utils/FileUtils";
 import { settingsPath } from "../../app/const";
 import { clearImagesFinalized } from "../process/ProcessSlice";
+import Version from "./Version";
 
 
 export default function Selection() {
@@ -35,38 +36,41 @@ export default function Selection() {
     }
     return (
         <>
-            <Typography color="text.primary" variant="h2" marginBottom="1em">Select folder and images layout</Typography>
-            <Box marginBottom="1em" alignItems='center' display='flex' flexDirection='column'>
-                <Stack spacing={4} >
-                    <Stack spacing={2} direction="row" alignItems="baseline">
-                        <Button variant="outlined" onClick={setImgFolder} disabled={loading}> Select Folder</Button> 
-                        <Typography minWidth="12em">{folder ? folder.name : null }</Typography>
-                        <Typography color="text.secondary" minWidth="12em">{files ? `(${files.length} files selected)` : ''} </Typography>
-                    </Stack>
-                    <OptionsList
-                        imgSrc1={dish1Leaf1}
-                        imgSrc2={dish4Leaf1}
-                        label1="One Dish"
-                        label2="Four Dishes"
-                        selected1 = {numDishes===1}
-                        selected2 = {numDishes===4}
-                        click1={()=>dispatch(setNumDishes(1))}
-                        click2={()=>dispatch(setNumDishes(4))}
-                        title="Select Image Layout"
-                    />
-                    <OptionsList
-                        imgSrc1={dish1Leaf1}
-                        imgSrc2={dish1Leaf2}
-                        label1="One leaf per dish"
-                        label2="Two leafs per dish"
-                        selected1={numLeafs===1}
-                        selected2={numLeafs===2}
-                        click1={()=>dispatch(setNumLeafs(1))}
-                        click2={()=>dispatch(setNumLeafs(2))}
-                        title="Select Number of leafs per dish" />
-                </Stack>   
+            <Box>
+                <Typography color="text.primary" variant="h2" marginBottom="1em">Select folder and images layout</Typography>
+                <Box marginBottom="1em" alignItems='center' display='flex' flexDirection='column'>
+                    <Stack spacing={4} >
+                        <Stack spacing={2} direction="row" alignItems="baseline">
+                            <Button variant="outlined" onClick={setImgFolder} disabled={loading}> Select Folder</Button> 
+                            <Typography minWidth="12em">{folder ? folder.name : null }</Typography>
+                            <Typography color="text.secondary" minWidth="12em">{files ? `(${files.length} files selected)` : ''} </Typography>
+                        </Stack>
+                        <OptionsList
+                            imgSrc1={dish1Leaf1}
+                            imgSrc2={dish4Leaf1}
+                            label1="One Dish"
+                            label2="Four Dishes"
+                            selected1 = {numDishes===1}
+                            selected2 = {numDishes===4}
+                            click1={()=>dispatch(setNumDishes(1))}
+                            click2={()=>dispatch(setNumDishes(4))}
+                            title="Select Image Layout"
+                        />
+                        <OptionsList
+                            imgSrc1={dish1Leaf1}
+                            imgSrc2={dish1Leaf2}
+                            label1="One leaf per dish"
+                            label2="Two leafs per dish"
+                            selected1={numLeafs===1}
+                            selected2={numLeafs===2}
+                            click1={()=>dispatch(setNumLeafs(1))}
+                            click2={()=>dispatch(setNumLeafs(2))}
+                            title="Select Number of leafs per dish" />
+                    </Stack>   
+                </Box>
+                <NextPage page={settingsPath} disabled={loading || files==null || files.length===0}/>
             </Box>
-            <NextPage page={settingsPath} disabled={loading || files==null || files.length===0}/>
+            <Version baseURL='https://github.com/VittorioAccomazzi/LeafSize' forkme={true} label='version ' />
         </>
     )
 }
