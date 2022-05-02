@@ -52,9 +52,11 @@ export default function Result() {
                 <TableContainer component={Paper} className={css.tableContainer} elevation={8}>
                     <Table stickyHeader>
                         <TableHead>
-                            <TableCell sx={{fontWeight:'bold'}}>Image Name</TableCell>
-                            <TableCell align='right' sx={{fontWeight:'bold'}}>{leafTableHeader} (pixels<sup>2</sup>)</TableCell>
-                            { ( numLeaf > 1 ) && <TableCell align='right' sx={{fontWeight:'bold'}}>Leaf 2 (pixels<sup>2</sup>)</TableCell>}
+                            <TableRow>
+                                <TableCell sx={{fontWeight:'bold'}}>Image Name</TableCell>
+                                <TableCell align='right' sx={{fontWeight:'bold'}}>{leafTableHeader} (pixels<sup>2</sup>)</TableCell>
+                                { ( numLeaf > 1 ) && <TableCell align='right' sx={{fontWeight:'bold'}}>Leaf 2 (pixels<sup>2</sup>)</TableCell>}
+                                </TableRow>
                         </TableHead>
                         <TableBody>
                             {

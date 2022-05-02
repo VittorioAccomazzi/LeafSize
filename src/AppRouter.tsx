@@ -2,11 +2,12 @@ import Selection from "./pages/selection/Selection";
 import Settings from "./pages/settings/Settings";
 import Process from "./pages/process/Process";
 import Result from "./pages/result/Result";
-import {Routes, Route, BrowserRouter} from "react-router-dom";
+import {Routes, Route, MemoryRouter} from "react-router-dom";
+import { root } from "./app/const";
 
 export default function () {
     return (
-        <BrowserRouter>
+        <MemoryRouter   initialEntries={[root]} initialIndex={1}>
             <Routes>
                 <Route path="/LeafSize">
                     <Route path="" element={<Selection/>}/>
@@ -15,6 +16,7 @@ export default function () {
                     <Route path="result" element={<Result/>}/>
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </MemoryRouter>
     )
 }
+
