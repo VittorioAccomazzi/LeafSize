@@ -56,7 +56,7 @@ export default function Result() {
                                 <TableCell sx={{fontWeight:'bold'}}>Image Name</TableCell>
                                 <TableCell align='right' sx={{fontWeight:'bold'}}>{leafTableHeader} (pixels<sup>2</sup>)</TableCell>
                                 { ( numLeaf > 1 ) && <TableCell align='right' sx={{fontWeight:'bold'}}>Leaf 2 (pixels<sup>2</sup>)</TableCell>}
-                                </TableRow>
+                            </TableRow>
                         </TableHead>
                         <TableBody>
                             {
