@@ -10,7 +10,7 @@ The application will walk through the steps necessary for the measurement:
 -	Selection of the image layout
 -	Settings for isolating the leaf (tune hue and saturation thresholds)
 -	Processing and review of all the images, accept the ones which are correct.
--	Result with the size of all the leaves and download.
+-	Review the results and download as excel file.
 You can iterate thought these steps as many times as necessary and accept a few images at the time. So, you’ll be able to accommodate for situation in which a single setting is not able to work satisfactory across all the images.
 
 
