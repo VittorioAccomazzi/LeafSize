@@ -24,9 +24,9 @@ describe('LeafSeg',()=>{
 
     test('shall measure the leaf correctly', async()=>{
 
-        const getImageFromFile = async ( ) : Promise<HTMLImageElement> => {
+        const getImageFromFile = async ( ) : Promise<ImageBitmap> => {
             const image = await loadCanvas(testImage);
-            return image as unknown as HTMLImageElement; 
+            return image as unknown as ImageBitmap; 
         }
 
         const targetSize = 1024
@@ -42,9 +42,9 @@ describe('LeafSeg',()=>{
         const error = 2; // in persentage
 
         for( const [idx, name] of imgLoader.List.entries() ){
-            const { scale, imageData } = await imgLoader.getImage(idx);
-            const {areas} = await LeafSeg.Process(imageData!, hueThr, satThr, 2);
-            CanvasUtils.PutImageData(htmlCnv,imageData!);
+            const { scale, imgData } = await imgLoader.getImage(idx);
+            const {areas} = await LeafSeg.Process(imgData!, hueThr, satThr, 2);
+            CanvasUtils.PutImageData(htmlCnv,imgData!);
             const hsh     = await hash(htmlCnv, name );
             areas.forEach((area,index)=>{
                 const rescaled = area / ( scale * scale );

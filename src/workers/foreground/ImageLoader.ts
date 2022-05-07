@@ -19,7 +19,7 @@ interface ImageTile {
     quadrant : Quadrant
 }
 
-export type ImageFileLoader =  ( handle : ImgLoaderFileHandle ) => Promise<HTMLImageElement> 
+export type ImageFileLoader =  ( handle : ImgLoaderFileHandle ) => Promise<ImageBitmap> 
 
 /**
  * Image loader.
@@ -27,7 +27,7 @@ export type ImageFileLoader =  ( handle : ImgLoaderFileHandle ) => Promise<HTMLI
  */
 export default class ImageLoader  {
     private tiles : ImageTile[] = []
-    private cacheImage : HTMLImageElement | null = null;
+    private cacheImage : ImageBitmap | null = null;
     private cacheFile  : ImgLoaderFileHandle | null = null;
     private getImageFromFile : ImageFileLoader
     private targetSize : number;
@@ -67,8 +67,26 @@ export default class ImageLoader  {
         }
     }
 
+    /**
+     * list of images generated
+     */
     get List() : string [] {
         return this.tiles.map(f=>f.name);
+    }
+
+    /**
+     * get file handle given the image name
+     */
+    FileHandle( name : string ) :ImgLoaderFileHandle | undefined {
+        return this.tiles.find(v=>v.name===name)?.file;
+    }
+
+    /**
+     * number of dishes for image
+     */
+    get NumDishes() : number {
+        let qList = new Set(this.tiles.map(v=>v.quadrant));
+        return qList.size;
     }
 
     /**
@@ -77,10 +95,10 @@ export default class ImageLoader  {
      * @param index index of the image to extract
      * @returns scale : downsample value of the original image in order to reach the diagonal size set in the constructor. imageData : image Data for the canvas object
      */
-    async getImage( index : number ): Promise< { scale : number, imageData : ImageData|null }> {
+    async getImage( index : number ): Promise< { scale : number, imgData : ImageData|null }> {
         let scale = 0;
-        let imageData = null;
-        if( !this.tiles || !this.tiles.length ) return {scale, imageData }; // this can happen as transition
+        let imgData = null;
+        if( !this.tiles || !this.tiles.length ) return {scale, imgData }; // this can happen as transition
         if( index <0 || index >this.tiles.length) throw Error(`undexpected index : requested ${index} but got ${this.tiles.length}`)
         const tile = this.tiles[index];
         const img = await this.getImageFromCache( tile );
@@ -128,18 +146,33 @@ export default class ImageLoader  {
         scale = Math.min( 1, this.targetSize/srcDiag);
         const dstWidth = srcWidth * scale;
         const dstHeight= srcHeight * scale;
-        const canvas = document.createElement('canvas')
-        canvas.width = dstWidth;
-        canvas.height= dstHeight;
+
+        // we need to get to the pixel data, and so we need a canvas (unfortunately)
+        // see https://github.com/whatwg/html/issues/4785
+        // Note OffscreenCanvas is deprecated below because it is experimental 
+        // see https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas/OffscreenCanvas 
+        // however since this will run in the workers I have no othre option.
+        let canvas : HTMLCanvasElement | OffscreenCanvas;
+        if( typeof document === 'undefined' ) {
+            // worker
+            canvas = new OffscreenCanvas(dstWidth, dstHeight);
+        } else {
+            // window
+            canvas = document.createElement('canvas')
+            canvas.width = dstWidth;
+            canvas.height= dstHeight;
+        }
+
+        // Extract the pixel data which is needed for further processing.
         const ctx = canvas.getContext('2d');
         if( ctx ) { 
             ctx.drawImage( img, xTopLft, yTopLft, srcWidth, srcHeight, 0, 0, dstWidth, dstHeight);
-            imageData = ctx.getImageData(0,0,dstWidth, dstHeight);
+            imgData = ctx.getImageData(0,0,dstWidth, dstHeight);
             // Debug only
             // ctx.font = '48px serif'; // debug only.
             // ctx.fillText(tile.name, 10, 60);
         }
-        return { scale, imageData }
+        return { scale, imgData }
     }
 
     /**
@@ -148,8 +181,9 @@ export default class ImageLoader  {
      * @param tile tile which describes the images to extract.
      * @returns 
      */
-    private async getImageFromCache( tile : ImageTile  ) : Promise<HTMLImageElement> {
+    private async getImageFromCache( tile : ImageTile  ) : Promise<ImageBitmap> {
         if( this.cacheFile !== tile.file  ){
+            if( this.cacheImage ) this.cacheImage.close(); // free resources.
             this.cacheImage = await this.getImageFromFile( tile.file );
             this.cacheFile  = tile.file;
         } 
@@ -162,16 +196,9 @@ export default class ImageLoader  {
      * @param handle file to load
      * @returns 
      */
-     async function getImageFromFile( handle : ImgLoaderFileHandle ) : Promise<HTMLImageElement> {
+     async function getImageFromFile( handle : ImgLoaderFileHandle ) : Promise<ImageBitmap> {
         const file = await handle.getFile();
         const data = await file.arrayBuffer();
         const blob = new Blob([data]);
-        return new Promise( res =>{
-            const img : HTMLImageElement =  document.createElement('img');
-            const data = URL.createObjectURL(blob);
-            img.onload = ()=>{
-                res( img );
-            }
-            img.src = data; 
-        });
+        return createImageBitmap(blob);
     }

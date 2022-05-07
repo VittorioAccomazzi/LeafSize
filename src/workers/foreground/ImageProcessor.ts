@@ -1,21 +1,17 @@
 import ImageLoader from "./ImageLoader";
-import LeafSeg from "../background/LeafSeg";
 import BoundingBox from "../../common/imgLib/BoundingBox";
+import LeafSegProxy, { Result } from "./LeafSegProxy";
 
 
 export type ProcessProgress = ( num : number, total : number) => void
-export interface Leaf {
-    imageData : ImageData,
-    areas : number[] 
-}
-const dilation = 25;
-const minWidth = 256;
-const minHeight= 256;
 
+/**
+ * process all the images.
+ */
 export default class ImageProcessor {
 
     private progress : ProcessProgress;
-    private imageLoader : ImageLoader;
+    private workers : LeafSegProxy;
     private hueThr : number;
     private satThr : number;
     private nLeafs : number;
@@ -24,41 +20,32 @@ export default class ImageProcessor {
     private nProcess: number;
 
     constructor( imageLoader : ImageLoader, progress : ProcessProgress, nProcess : number, hueThr : number, satThr : number, nLeafs : number ){
-        this.imageLoader = imageLoader;
         this.progress = progress;
         this.hueThr = hueThr;
         this.satThr = satThr;
         this.nLeafs = nLeafs;
         this.nProcess= nProcess;
         this.numDone= 0;
+        this.workers = new LeafSegProxy(imageLoader);
     }
 
-    async getImage( name : string ) : Promise<Leaf | null> {
-        if( this.isDisposed ) return null;
-        const index = this.imageLoader.List.indexOf(name);
-        const { scale, imageData } = await this.imageLoader.getImage(index);
-        const { areas, bboxs } = LeafSeg.Process(imageData!, this.hueThr, this.satThr, this.nLeafs);
-        const box = BoundingBox.Merge(bboxs);
-        let leafData  : ImageData = imageData!;
-        let leafAreas : number [] = [];
-        if( !BoundingBox.IsEmpty(box) ){
-            let wDilation = dilation;
-            let hDilation = dilation;
-            if( box.size.width < minWidth ) wDilation = Math.max(wDilation, ( minWidth-box.size.width)/2|0);
-            if( box.size.height< minHeight) hDilation = Math.max(hDilation, ( minHeight-box.size.height)/2|0);
-            const dBox = BoundingBox.Dilate(box, wDilation, hDilation);
-            leafData = BoundingBox.CropImage(dBox, imageData!)!;
-            leafAreas= areas.map(v=>(v/(scale*scale)|0));
+    /**
+     * process the image, and generate bitmap and measurements.
+     * @param name 
+     * @returns 
+     */
+    async getImage( name : string ) : Promise<Result | null> {
+        let leaf : Result | null = null
+        if( !this.isDisposed ){
+            leaf = await this.workers.process(name, this.hueThr, this.satThr, this.nLeafs);
         }
         this.numDone++;
         this.progress(this.numDone, this.nProcess);
-        return {
-            imageData : leafData,
-            areas : leafAreas
-        };
+        return leaf
     }
 
     dispose(){
         this.isDisposed = true;
+        this.workers.dispose();
     }
 }

@@ -1,5 +1,3 @@
-import { ThermostatOutlined } from "@mui/icons-material";
-
 type WaitRequest = ()=>void;
 
 /**
@@ -52,7 +50,6 @@ export default class Scheduler<InpType, OutType> {
 
     // handle the queue of request to wait for the execution.
     private QueueRequest() : Promise<void> {
-
         return this.isDisposed ? Promise.resolve()  : new Promise( res => this.queue.push(res))
     }
 

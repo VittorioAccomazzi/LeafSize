@@ -63,11 +63,15 @@ describe('ImageLoader File list',()=>{
     test('dish 1 use case',()=>{
         const imageLoader = new ImageLoader(files, 1, 1000 );
         expect(imageLoader.List).toStrictEqual(names1)
+        expect(imageLoader.NumDishes).toBe(1);
+        expect(imageLoader.FileHandle(names1[0])).toBe(files[0]);
     })
 
     test('dish 4 use case',()=>{
         const imageLoader = new ImageLoader(files, 4, 1000);
-        expect(imageLoader.List).toStrictEqual(names4)
+        expect(imageLoader.List).toStrictEqual(names4);
+        expect(imageLoader.NumDishes).toBe(4);
+        expect(imageLoader.FileHandle(names4[0])).toBe(files[0]);
     })
 
     test('shall throw if dishes is wrong',()=>{
@@ -96,17 +100,17 @@ describe('ImageLoader', ()=>{
     ];
 
 
-    const getImageFromFile = async ( handle : ImgLoaderFileHandle) : Promise<HTMLImageElement> => {
+    const getImageFromFile = async ( handle : ImgLoaderFileHandle) : Promise<ImageBitmap> => {
         const file = await handle.getFile();
         const buffer= await file.arrayBuffer();
         const image = await loadImage(Buffer.from(buffer));
-        return image as unknown as HTMLImageElement; 
+        return image as unknown as ImageBitmap; 
     }
 
     it('shall split the images properly', async ()=>{
 
         let numInvocations = 0;
-        const getImageWithCount= async ( handle : ImgLoaderFileHandle) : Promise<HTMLImageElement> => {
+        const getImageWithCount= async ( handle : ImgLoaderFileHandle) : Promise<ImageBitmap> => {
             numInvocations++
             return getImageFromFile(handle);
         }
@@ -115,8 +119,8 @@ describe('ImageLoader', ()=>{
         expect(imgLoader.List.length).toBe(4);
         const canvas = document.createElement('canvas');
         for( let i=0; i<imgLoader.List.length; i++ ){
-            const {imageData} = await imgLoader.getImage(i);
-            CanvasUtils.PutImageData(canvas,imageData!);
+            const {imgData} = await imgLoader.getImage(i);
+            CanvasUtils.PutImageData(canvas,imgData!);
             const fileName = `canvas-${i}`;
             const hsh = await hash(canvas, fileName);
             expect(hsh).toMatchSnapshot();
@@ -142,8 +146,8 @@ describe('ImageLoader', ()=>{
         expect(imgLoader.List.length).toBe(4);
         const canvas = document.createElement('canvas');
         for( let i=0; i<imgLoader.List.length; i++ ){
-            const  { scale, imageData} = await imgLoader.getImage(i);
-            CanvasUtils.PutImageData(canvas, imageData!);
+            const  { scale, imgData} = await imgLoader.getImage(i);
+            CanvasUtils.PutImageData(canvas, imgData!);
             expect(scale).toBeCloseTo(expScale,2);
 
         }

@@ -16,5 +16,5 @@ test('Selection', () => {
       </Provider>
     );
 
-    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.getByText('Select folder and images layout')).toBeInTheDocument();
   });

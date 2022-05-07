@@ -1,5 +1,3 @@
-import { listenerCount } from 'process';
-import { useInRouterContext } from 'react-router-dom';
 import BoundingBox from './BoundingBox';
 import IImage, {Bbox, Colour, Point} from './Types'
 

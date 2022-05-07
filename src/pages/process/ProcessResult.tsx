@@ -1,11 +1,12 @@
 
 import { useEffect, useRef, useState } from "react";
-import ImageProcessing, {Leaf} from '../../workers/foreground/ImageProcessor'
+import ImageProcessing from '../../workers/foreground/ImageProcessor'
 import useMouseOver from "../../common/useLib/useMouseOver";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Box, Button } from "@mui/material";
 import AreaInfo from "./AreaInfo";
 import css from './Process.module.css'
+import { Result } from "../../workers/foreground/LeafSegProxy";
 
 export interface ProcessResultProp {
     name : string,
@@ -24,13 +25,13 @@ export default function ProcessResult ( { name, imageProcessor, onDelete, onResu
 
     useEffect(()=>{
         imageProcessor.getImage(name)
-            .then(( leaf : Leaf | null ) => {
+            .then(( leaf : Result | null ) => {
                 if( leaf && canvas.current ){
-                    const { imageData, areas } = leaf;
-                    canvas.current.width = imageData.width;
-                    canvas.current.height= imageData.height;
+                    const { imgData, areas } = leaf;
+                    canvas.current.width = imgData.width;
+                    canvas.current.height= imgData.height;
                     const ctx = canvas.current.getContext('2d');
-                    ctx!.putImageData(imageData, 0, 0)
+                    ctx!.putImageData(imgData, 0, 0)
                     setAreas(areas);
                     setReady(true);
                     onResult(name, areas);

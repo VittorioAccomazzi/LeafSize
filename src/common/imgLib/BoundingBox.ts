@@ -1,4 +1,3 @@
-import { HeightRounded } from "@mui/icons-material";
 import { Bbox, Point } from "./Types";
 import { ImageDataAllocator, imageDataAllocator } from "./Types";
 

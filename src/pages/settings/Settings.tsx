@@ -36,9 +36,9 @@ export default function Settings() {
     const loadData = async ( imageName : string ) => {
         const index = imgLoader.List.findIndex(v => v===imageName);
         if( index >=0 ){
-            const { imageData } = await imgLoader.getImage(index);
-            setImageData(imageData);
-            setOrgData(imageData);
+            const { imgData } = await imgLoader.getImage(index);
+            setImageData(imgData);
+            setOrgData(imgData);
         }
     }
 

@@ -4,3 +4,6 @@ export const selectionPath = `${root}`;
 export const processingPath= `${root}process`;
 export const resultPath    = `${root}result`;
 export const imageSize     =1024;
+export const dilation = 25;
+export const minWidth = 256;
+export const minHeight= 256;
