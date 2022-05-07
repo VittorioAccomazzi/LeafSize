@@ -26,13 +26,7 @@ export default function Process() {
     const [finalized, setFinalized] = useState<ImageFinalized[]>([]);
     const [isFinalized, setIsFinalized] = useState<boolean>(false);
     const imgLoader= useMemo<ImageLoader>(()=>new ImageLoader(fileList, numDishes, imageSize),[fileList, numDishes]);
-
-    let start = useMemo<number>(()=>Date.now(),[]);
-    const progress = (done : number, total : number )=> {
-        if( done === 0 ) start = Date.now(); // 🖐 TEST ONLY  -- do not commit.
-        if( done === total ) console.log(` Process Completed in ${Date.now()-start}ms`)
-        setPerc((100*done/total)|0);
-    }
+    const progress = (done : number, total : number )=>{setPerc((100*done/total)|0)};
     const imagesToProcess = useImagesToProcess(imgLoader.List); 
     const imgProcessor = useMemo<ImageProcessor>(()=>new ImageProcessor(
             imgLoader,
