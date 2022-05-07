@@ -7,9 +7,8 @@
 //
 
 import { imageSize } from "../../app/const";
-import { Bbox } from "../../common/imgLib/Types";
 import ImageLoader from "../foreground/ImageLoader";
-import { LeafCrop } from "./LeafCrop";
+import LeafCrop from "./LeafCrop";
 import LeafSeg from "./LeafSeg";
 
 export interface QueryMessage {

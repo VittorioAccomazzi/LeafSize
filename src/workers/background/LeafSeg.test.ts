@@ -1,11 +1,7 @@
 import hash, { loadCanvas, testImage } from '../../common/utils/TestUtils';
 import ImageLoader, { ImgLoaderFile, ImgLoaderFileHandle } from '../foreground/ImageLoader';
-import {loadImage} from 'canvas'
 import CanvasUtils from '../../common/utils/CanvasUtils';
 import LeafSeg from './LeafSeg'
-import {Canvas} from 'canvas'
-import { act } from 'react-dom/test-utils';
-import { assert } from 'console';
 
 
 describe('LeafSeg',()=>{

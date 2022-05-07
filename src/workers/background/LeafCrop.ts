@@ -7,7 +7,7 @@ import { Bbox } from "../../common/imgLib/Types";
 /**
  * simple class to crop the image based on the bounding box
  */
-export class LeafCrop {
+export default class LeafCrop {
     private constructor() {} // singleton
 
     static Process( areas : number[], bboxs : Bbox[], imgData : ImageData, scale : number ) {

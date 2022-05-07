@@ -1,5 +1,4 @@
 import ImageLoader from "./ImageLoader";
-import BoundingBox from "../../common/imgLib/BoundingBox";
 import LeafSegProxy, { Result } from "./LeafSegProxy";
 
 
