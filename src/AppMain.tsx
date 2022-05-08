@@ -1,13 +1,15 @@
 import { Box, Typography } from "@mui/material";
 import React, { useMemo } from "react";
 import BrowserInfo from "./common/utils/BrowserInfo";
+import {withErrorBoundary} from 'react-error-boundary';
+import AppError from "./AppError";
 import  './App.css'
 
 export interface AppMainProp {
     children : React.ReactNode
 }
 
-export default function AppMain({children} : AppMainProp ) {
+function AppMain({children} : AppMainProp ) {
     const bInfo = useMemo<BrowserInfo>( ()=> new BrowserInfo(), [] );
     return (
         <>
@@ -29,3 +31,12 @@ export default function AppMain({children} : AppMainProp ) {
         </>
     )
 }
+
+export default withErrorBoundary(AppMain, {
+    FallbackComponent: AppError,
+    onError(error, info) {
+        console.error(`❌ ${error.message}`);
+        console.error(`${error.stack}`);
+        console.error(`${info.componentStack}`)
+    },
+});
