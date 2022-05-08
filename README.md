@@ -8,11 +8,14 @@ The application is now live at [https://vittorioaccomazzi.github.io/LeafSize/](h
 ## Workflow
 The application will walk through the steps necessary for the measurement:
 -	Selection of the image layout
--	Settings for isolating the leaf (tune hue and saturation thresholds)
--	Processing and review of all the images, accept the ones which are correct.
+-	Settings for isolating the leaf (change the hue and saturation thresholds)
+-	Processing of all the images and remove the ones which are not correct, and accept the rest.
 -	Review the results and download as excel file.
+
 You can iterate thought these steps as many times as necessary and accept a few images at the time. So, you’ll be able to accommodate for situation in which a single setting is not able to work satisfactory across all the images.
 
+### Privacy
+Your images will **not** be copied nor uploaded to a server, all the processing occurs locally on your computer. 
 
 ## Input Images
 The application assumes that you acquire a large number of images with the leaf, each image shall have 1 or 4 petri dishes and the leaf must be places on the dishes.  The background (table) shall be white, and the lighting uniform. See the image below as example.
@@ -22,16 +25,16 @@ For the optimal result please acquire the images as follow:
 -	Constant white background on the images.
 -	Make sure that the leaves are not touching each other.
 
-<img src="src/assets/SampleImage.jpg" width="1024" />
+<img src="src/assets/SampleImage.jpg" width="512" />
 
 ## Output
 The application will report the size of each leaf in pixels. You can calibrate the image simply placing a rule in the image, and so convert the values in squared centimeters. You will be able to review the values on the browser and download a csv file for further elaboration with excel.
 
 # Technical
-The application is written with react and leverages several new features available in Chrome :
--	Background workers
--	File System Access API
--	Progressive Web App (planned)
+The application is written with react and leverages several new and experimental features available in Chrome :
+-	[Background workers](https://www.html5rocks.com/en/tutorials/workers/basics/)
+-	[File System Access API](https://web.dev/file-system-access/)
+-	[Offscreen Canvas](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
 
 ## Contributing
 If you like to contribuite to the application, clone the repository and create a pull request.
