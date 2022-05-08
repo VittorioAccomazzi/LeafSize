@@ -17,8 +17,8 @@ import * as cp from 'child-process-promise';
         let status = stat.stdout;
         let isRel  = status.indexOf("nothing to commit, working tree clean") > 0;
         if( isRel ){
-            gitInfo.version = short.stdout;
-            gitInfo.long= long.stdout; 
+            gitInfo.version = short.stdout.trim();
+            gitInfo.long= long.stdout.trim();
         }
         fs.writeFileSync('src/tools/gitInfo.json', JSON.stringify(gitInfo));
     } catch ( ex  ){

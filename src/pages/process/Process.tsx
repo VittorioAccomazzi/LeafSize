@@ -13,6 +13,8 @@ import { selectFiles, selectNumDishes, selectNumLeafs } from "../selection/selec
 import { selectHue, selectSaturation } from "../settings/settingSlice";
 import ImageProcessor from "../../workers/foreground/ImageProcessor";
 import ProcessResult from "./ProcessResult";
+import usePageTracking from "../../common/useLib/usePageTracking";
+import GA from "../../common/utils/GA";
 
 export default function Process() {
     const fileList = useAppSelector(selectFiles);
@@ -27,6 +29,7 @@ export default function Process() {
     const [isFinalized, setIsFinalized] = useState<boolean>(false);
     const imgLoader= useMemo<ImageLoader>(()=>new ImageLoader(fileList, numDishes, imageSize),[fileList, numDishes]);
     const progress = (done : number, total : number )=>{setPerc((100*done/total)|0)};
+    const start = useMemo<number>(()=>Date.now(),[]);
     const imagesToProcess = useImagesToProcess(imgLoader.List); 
     const imgProcessor = useMemo<ImageProcessor>(()=>new ImageProcessor(
             imgLoader,
@@ -40,10 +43,22 @@ export default function Process() {
         // if nothing selected redirect on seletion page.
         useAutomaticRedirect(fileList);
 
+        // track usage
+        usePageTracking();
+
          // dispose the image processor when we exit this page.
          useEffect(()=>{
             return ()=>imgProcessor.dispose();
          },[imgProcessor])
+
+         // tracking performances
+         useEffect(()=>{
+             if( perc === 100 ){
+                const elaps = Date.now()-start;
+                GA.event('Performances','Images', `${imagesToProcess.length}`)
+                GA.event('Performances','Processing', `${elaps/imagesToProcess.length}`)
+             }
+         },[perc, start])
 
          // images which segmentation has been rejected.
          const onDelete = (name:string)=>{

@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import BrowserInfo from "./common/utils/BrowserInfo";
 import {withErrorBoundary} from 'react-error-boundary';
 import AppError from "./AppError";
+import GA from './common/utils/GA';
 import  './App.css'
 
 export interface AppMainProp {
@@ -35,8 +36,6 @@ function AppMain({children} : AppMainProp ) {
 export default withErrorBoundary(AppMain, {
     FallbackComponent: AppError,
     onError(error, info) {
-        console.error(`❌ ${error.message}`);
-        console.error(`${error.stack}`);
-        console.error(`${info.componentStack}`)
+        GA.error(` ${error.message} Stack ${error.stack ?? 'not available'} Component ${info.componentStack}` ) 
     },
 });

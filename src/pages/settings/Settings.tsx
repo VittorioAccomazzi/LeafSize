@@ -11,6 +11,7 @@ import LeafSeg from "../../workers/background/LeafSeg";
 import { selectHue, selectSaturation } from "./settingSlice";
 import useShiftKey from "../../common/useLib/useKeyPress";
 import { imageSize } from "../../app/const";
+import usePageTracking from "../../common/useLib/usePageTracking";
 
 
 const delay = 200; // ms to wait for the user to complete the action prior to load the image
@@ -32,6 +33,9 @@ export default function Settings() {
 
     // if nothing selected redirect on seletion page.
     useAutomaticRedirect(fileList);
+
+    // track usage
+    usePageTracking();
 
     const loadData = async ( imageName : string ) => {
         const index = imgLoader.List.findIndex(v => v===imageName);
@@ -56,6 +60,8 @@ export default function Settings() {
         if( shiftPress ) process();
     },[orgData])
 
+    if( shiftPress) throw Error('Booom !!')
+    
     return (
         <Box className="fullPage" >
             <Box className={css.topFrame}>

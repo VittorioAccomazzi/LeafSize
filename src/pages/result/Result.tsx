@@ -18,6 +18,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import usePageTracking from "../../common/useLib/usePageTracking";
+import GA from "../../common/utils/GA";
 
 export default function Result() {
     const fileList = useAppSelector(selectFiles);
@@ -30,6 +32,9 @@ export default function Result() {
     // if nothing selected redirect on seletion page.
     useAutomaticRedirect(fileList);
 
+    // track usage
+    usePageTracking();
+
     const onDownload = () =>{
         const content = generateContent(imgFinalized, numLeaf);
         let text = 'data:text/plain;charset=utf-8,'  + encodeURIComponent(content);
@@ -37,7 +42,8 @@ export default function Result() {
         link.setAttribute('download', 'result.csv')
         link.setAttribute('href', text)
         link.click() 
-
+        GA.event('User','Result Finalized', `${imgFinalized.length}`);
+        GA.event('User','Result Rejected', `${imagesToProcess.length}`);
     }
     const leafTableHeader = numLeaf > 1 ?'Leaf 1' : 'Leaf';
     return (

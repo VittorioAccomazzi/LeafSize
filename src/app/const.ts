@@ -7,3 +7,4 @@ export const imageSize     =1024;
 export const dilation = 25;
 export const minWidth = 256;
 export const minHeight= 256;
+export const GAUID    = "G-2TD0F8G11B";

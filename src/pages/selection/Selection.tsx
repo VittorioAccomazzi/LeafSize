@@ -12,6 +12,7 @@ import isImage from "../../common/utils/FileUtils";
 import { settingsPath } from "../../app/const";
 import { clearImagesFinalized } from "../process/ProcessSlice";
 import Version from "./Version";
+import usePageTracking from "../../common/useLib/usePageTracking";
 
 
 export default function Selection() {
@@ -21,6 +22,9 @@ export default function Selection() {
     const numLeafs  = useAppSelector(selectNumLeafs);
     const [loading, setLoading] = useState<boolean>(false)
     const dispatch  = useAppDispatch();
+
+    // track usage
+    usePageTracking();
 
     const setImgFolder = async () =>{
         const dirHandle = await showDirectoryPicker();
