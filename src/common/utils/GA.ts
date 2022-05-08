@@ -32,7 +32,7 @@ export default class GA {
     }
 
     static error( errorDetails : string ) {
-        GA.event('Error', 'Crash', GA.appVersion+' '+errorDetails);
+        GA.event('Error', 'Crash', GA.appVersion.substring(0,4)+' '+errorDetails);
     }
 
     static event ( category : Category, action : string, label : string ){

@@ -60,8 +60,6 @@ export default function Settings() {
         if( shiftPress ) process();
     },[orgData])
 
-    if( shiftPress) throw Error('Booom !!')
-    
     return (
         <Box className="fullPage" >
             <Box className={css.topFrame}>
