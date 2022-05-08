@@ -64,12 +64,12 @@ export default function Selection() {
                             imgSrc1={dish1Leaf1}
                             imgSrc2={dish1Leaf2}
                             label1="One leaf per dish"
-                            label2="Two leafs per dish"
+                            label2="Two leaves per dish"
                             selected1={numLeafs===1}
                             selected2={numLeafs===2}
                             click1={()=>dispatch(setNumLeafs(1))}
                             click2={()=>dispatch(setNumLeafs(2))}
-                            title="Select Number of leafs per dish" />
+                            title="Select Number of leaves per dish" />
                     </Stack>   
                 </Box>
                 <NextPage page={settingsPath} disabled={loading || files==null || files.length===0}/>
