@@ -42,8 +42,8 @@ export default function Result() {
         link.setAttribute('download', 'result.csv')
         link.setAttribute('href', text)
         link.click() 
-        GA.event('User','Result Finalized', `${imgFinalized.length}`);
-        GA.event('User','Result Rejected', `${imagesToProcess.length}`);
+        GA.event('User','Result', 'Finalized', imgFinalized.length);
+        GA.event('User','Result', 'Rejected',  imagesToProcess.length);
     }
     const leafTableHeader = numLeaf > 1 ?'Leaf 1' : 'Leaf';
     return (

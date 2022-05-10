@@ -55,8 +55,8 @@ export default function Process() {
          useEffect(()=>{
              if( perc === 100 ){
                 const elaps = Date.now()-start;
-                GA.event('Performances','Images', `${imagesToProcess.length}`)
-                GA.event('Performances','Processing', `${elaps/imagesToProcess.length}`)
+                GA.event('Performances','Processing', 'Images processed', imagesToProcess.length);
+                GA.event('Performances','Processing', 'Time per image',elaps/imagesToProcess.length);
              }
          },[perc, start])
 

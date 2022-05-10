@@ -35,8 +35,15 @@ export default class GA {
         GA.event('Error', 'Crash', GA.appVersion.substring(0,4)+' '+errorDetails);
     }
 
-    static event ( category : Category, action : string, label : string ){
-        if(GA.ga4) GA.ga4.event(action, label, category, false);
+    static event ( category : Category, action : string, label : string, value? : number ){
+        if(GA.ga4) GA.ga4.gtag(
+            'event', action, {
+                event_label: label,
+                event_category: category,
+                event_value : value,
+                non_interaction: false,
+            }
+        )
     }
 
 }
