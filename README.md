@@ -1,14 +1,18 @@
 
 
 # Application
-Leaf Size is an application for the measurement size of the leaf. The application is specifically designed for high throughput: allow to quantify as many images as possible in the least amount of time.
+Leaf Size is a Web application for the measurement size of the leaves in your images. The application is specifically designed for high throughput: allow to quantify as many images as possible in the least amount of time.
 
 The application is now live at [https://vittorioaccomazzi.github.io/LeafSize/](https://vittorioaccomazzi.github.io/LeafSize/)
 
+<p align="center">
+    <img src="src/assets/workflow.gif" />
+</p>
+
 ## Workflow
-The application will walk through the steps necessary for the measurement:
+The application walk you through the steps necessary for the measurement:
 -	Selection of the image layout
--	Settings for isolating the leaf (change the hue and saturation thresholds)
+-	Settings for isolating the leaves (change the hue and saturation thresholds)
 -	Processing of all the images and remove the ones which are not correct, and accept the rest.
 -	Review the results and download as excel file.
 
@@ -25,7 +29,9 @@ For the optimal result please acquire the images as follow:
 -	Constant white background on the images.
 -	Make sure that the leaves are not touching each other.
 
-<img src="src/assets/SampleImage.jpg" width="512" />
+<p align="center">
+    <img src="src/assets/SampleImage.jpg" width="128" />
+</p>
 
 ## Output
 The application will report the size of each leaf in pixels. You can calibrate the image simply placing a rule in the image, and so convert the values in squared centimeters. You will be able to review the values on the browser and download a csv file for further elaboration with excel.
