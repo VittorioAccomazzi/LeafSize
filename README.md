@@ -30,7 +30,7 @@ For the optimal result please acquire the images as follow:
 -	Make sure that the leaves are not touching each other.
 
 <p align="center">
-    <img src="src/assets/SampleImage.jpg" width="128" />
+    <img src="src/assets/SampleImage.jpg" width="256" />
 </p>
 
 ## Output
