@@ -11,15 +11,15 @@ The application is now live at [https://vittorioaccomazzi.github.io/LeafSize/](h
 
 ## Workflow
 The application walk you through the steps necessary for the measurement:
--	Selection of the image layout
--	Settings for isolating the leaves (change the hue and saturation thresholds)
--	Processing of all the images and remove the ones which are not correct, and accept the rest.
--	Review the results and download as excel file.
+1.	Selection of the image layout
+2.	Settings for isolating the leaves (hue and saturation thresholds)
+3.	Review of the result and removal of the ones which are not accurate, and accept the rest.
+4.	Download the values as excel file.
 
-You can iterate thought these steps as many times as necessary and accept a few images at the time. So, you’ll be able to accommodate for situation in which a single setting is not able to work satisfactory across all the images.
+You can iterate thought these steps 2 and 3 as many times as necessary and accept a few images at the time. So, you’ll be able to accommodate for situation in which a single setting is not able to work satisfactory across all the images. [This video](https://www.youtube.com/watch?v=_5F8r_aCtMU) shows the entire workflow.
 
 ### Privacy
-Your images will **not** be copied nor uploaded to a server, all the processing occurs locally on your computer. 
+Your images will **not** be copied nor uploaded to a server, all the processing occurs locally on your computer inside your browser.
 
 ## Input Images
 The application assumes that you acquire a large number of images with the leaf, each image shall have 1 or 4 petri dishes and the leaf must be places on the dishes.  The background (table) shall be white, and the lighting uniform. See the image below as example.

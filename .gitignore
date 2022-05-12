@@ -20,6 +20,9 @@ gitInfo.json
 #temp file for testing
 testDump
 
+#my noted
+Documents
+
 # misc
 .DS_Store
 .env.local
