@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
 export interface SettingsState {
-    hue : number,
-    saturation : number
+    hue : number, // [0,255]
+    saturation : number // [0,255]
 }
 
 const initialState : SettingsState = {

@@ -80,7 +80,7 @@ export default class ColourModels {
      * @param b blue value in [0,1.0]
      * @returns h in [0,360], s in [0,1] and v in [0,1]
      */
-     private static Rgb2Hsv( r: number, g : number, b: number  ) : { h: number, s: number, v: number } {
+     static Rgb2Hsv( r: number, g : number, b: number  ) : { h: number, s: number, v: number } {
         // talen from https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
         let out = { h: 0, v:0, s: 0}
         let min = Math.min(r,g,b)
@@ -110,7 +110,7 @@ export default class ColourModels {
      * @param v [0,1]
      * @returns r [0,255] g [0,255] and b [0,255]
      */
-    private static Hsv2Rgb(h:number, s:number, v:number) : {r:number, g:number, b:number} {
+    static Hsv2Rgb(h:number, s:number, v:number) : {r:number, g:number, b:number} {
         // from https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
         let out = { r:v, g:v, b:v}
         if( s > 0 ){

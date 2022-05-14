@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import useCenterPos from "../../../common/useLib/useCenterPos";
 import usePanZoom from "../../../common/useLib/usePanZoom";
 import { ImageData } from "canvas";
+import AutoZoom from './AutoZoom'
 
 interface DisplayPartProp {
     imageData : ImageData | null
@@ -33,6 +34,7 @@ export default function DisplayPart({ imageData }:DisplayPartProp) {
     return (
         <Box className={css.displayPart} ref={mainDiv} >
             <canvas ref={canvas} className="mainCanvas" style={{ display:"block", transformOrigin: "0px 0px",  transform: cpMatrix.toString() }}/>
+            <AutoZoom inData={imageData} outDiv={mainDiv} matrix={cpMatrix} />
         </Box>
     )
 }

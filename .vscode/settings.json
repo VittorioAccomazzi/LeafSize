@@ -1,5 +1,6 @@
 {
     "npm.scriptExplorerExclude": [
         "^pre"
-    ]
+    ],
+    "typescript.inlayHints.parameterTypes.enabled": true
 }

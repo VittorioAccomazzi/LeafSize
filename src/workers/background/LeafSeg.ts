@@ -12,8 +12,8 @@ export default class LeafSeg {
     /**
      * Perform the identification of the leaf(s) in the input image
      * @param imgData  input image
-     * @param hueThr  hue threshold [0,360]
-     * @param satThr saturation threshold [0,1]
+     * @param hueThr  hue threshold [0,255]
+     * @param satThr saturation threshold [0,255]
      * @param nLeafs number of leafs 1 or 2
      * @returns areas : array with the areas measured, bboxs : bounding box for each leaf measured.
      */
@@ -28,7 +28,7 @@ export default class LeafSeg {
         const sPixels = sat.imagePixels;
 
         // background mask
-        hueThr *= 360/255;
+        hueThr *= 360/255; // rage expected by the library
         satThr *= 1/255;
         hPixels.forEach((v,i)=>mPixels[i]= v > hueThr || sPixels[i] < satThr); 
 

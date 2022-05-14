@@ -31,7 +31,7 @@ export default function Settings() {
     const shiftPress= useShiftKey();
 
 
-    // if nothing selected redirect on seletion page.
+    // if nothing selected redirect on selection page.
     useAutomaticRedirect(fileList);
 
     // track usage
