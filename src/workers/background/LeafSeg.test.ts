@@ -1,7 +1,7 @@
 import hash, { loadCanvas, testImage } from '../../common/utils/TestUtils';
 import ImageLoader, { ImgLoaderFile, ImgLoaderFileHandle } from '../foreground/ImageLoader';
 import CanvasUtils from '../../common/utils/CanvasUtils';
-import LeafSeg from './LeafSeg'
+import LeafSeg, { BackgroundType } from './LeafSeg'
 
 
 describe('LeafSeg',()=>{
@@ -18,15 +18,15 @@ describe('LeafSeg',()=>{
         async getFile () { return new EmptyFileMock() }
     }
 
+    const getImageFromFile = async ( ) : Promise<ImageBitmap> => {
+        const image = await loadCanvas(testImage);
+        return image as unknown as ImageBitmap; 
+    }
+    const targetSize = 1024
+    const files = [new FileHandleMock() ]
+
     test('shall measure the leaf correctly', async()=>{
 
-        const getImageFromFile = async ( ) : Promise<ImageBitmap> => {
-            const image = await loadCanvas(testImage);
-            return image as unknown as ImageBitmap; 
-        }
-
-        const targetSize = 1024
-        const files = [new FileHandleMock() ]
         const imgLoader = new ImageLoader(files, 4, targetSize, getImageFromFile);
 
         expect(imgLoader.List.length).toBe(4);
@@ -50,6 +50,21 @@ describe('LeafSeg',()=>{
             })
             expect(hsh).toMatchSnapshot();
         }
+    })
+
+    test('shall retun a transparent image', async ()=>{
+        const imgLoader = new ImageLoader(files, 1, targetSize, getImageFromFile);
+
+        expect(imgLoader.List.length).toBe(1);
+
+        const htmlCnv = document.createElement('canvas');
+        const hueThr = 68;
+        const satThr = 91;
+        const { imgData } = await imgLoader.getImage(0);
+        await LeafSeg.Process(imgData!, hueThr, satThr, 2, BackgroundType.Transparent);
+        CanvasUtils.PutImageData(htmlCnv,imgData!);
+        const hsh     = await hash(htmlCnv, 'transparent' );
+        expect(hsh).toMatchSnapshot();
     })
 
 })

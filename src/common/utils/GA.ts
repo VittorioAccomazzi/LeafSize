@@ -24,7 +24,15 @@ export default class GA {
     }
 
     private static get ga4()  {
-        return GA4React.getGA4React();
+        let ga = null;
+        if( GA.appVersion ) {
+            try {
+                ga = GA4React.getGA4React()
+            } catch {
+                ga = null; // either not connected or running tests
+            }
+        }
+        return ga;
     }
 
     static pageView( location : string ) {

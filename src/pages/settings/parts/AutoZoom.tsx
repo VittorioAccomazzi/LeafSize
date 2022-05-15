@@ -36,7 +36,7 @@ export default function AutoZoom({inData, outDiv, matrix} : AutoZoomProp){
     let canvasStyle = hide;
     if( event.device === umDeviceTypes.Mouse && inpImage.current &&outCanvas.current && inData ){
         const mouseEvent = event.event as umMouseEvent;
-        if ( mouseEvent.button === umButtonPress.None && mouseEvent.mousePoint != null ) {
+        if ( mouseEvent.mousePoint != null ) {
             canvasStyle = show;
             displayCanvas(matrix, outCanvas.current, inpImage.current, inData, mouseEvent.mousePoint);
         }

@@ -8,33 +8,45 @@ import { ImageData } from "canvas";
 import AutoZoom from './AutoZoom'
 
 interface DisplayPartProp {
-    imageData : ImageData | null
+    orgData : ImageData | null,
+    ovlData : ImageData | null
 }
 
-export default function DisplayPart({ imageData }:DisplayPartProp) {
-    const canvas = useRef<HTMLCanvasElement | null>(null)
+export default function DisplayPart({ orgData, ovlData }:DisplayPartProp) {
+    const orgCanvas = useRef<HTMLCanvasElement | null>(null)
+    const ovlCanvas = useRef<HTMLCanvasElement | null>(null)
     const mainDiv= useRef<HTMLDivElement|null>(null)
 
     // update the canvas when index changes
     useEffect( ()=> {
-            if( imageData && canvas.current) {
-                const width = imageData.width;
-                const height= imageData.height;
-                canvas.current.width = width;
-                canvas.current.height= height;
-                const ctx = canvas.current.getContext('2d');
-                ctx?.putImageData(imageData,0,0);
-            }
-    },[imageData])
+            setCanvas(orgData, orgCanvas);
+    },[orgData])
+
+    useEffect (()=>{
+        setCanvas(ovlData, ovlCanvas);       
+    },[ovlData])
 
     const pzMatrix = usePanZoom(mainDiv,[mainDiv])
-    let cpMatrix = useCenterPos(canvas, mainDiv, [imageData?.width, imageData?.height])
-    cpMatrix.preMultiplySelf(pzMatrix)
+    let orgMatrix = useCenterPos(orgCanvas, mainDiv, [orgData?.width, orgData?.height])
+    orgMatrix.preMultiplySelf(pzMatrix)
+    const yOffset = orgCanvas.current ? -orgCanvas.current.height : 0;
 
     return (
         <Box className={css.displayPart} ref={mainDiv} >
-            <canvas ref={canvas} className="mainCanvas" style={{ display:"block", transformOrigin: "0px 0px",  transform: cpMatrix.toString() }}/>
-            <AutoZoom inData={imageData} outDiv={mainDiv} matrix={cpMatrix} />
+            <canvas ref={orgCanvas} style={{ display:"block", transformOrigin: "0px 0px",  transform: orgMatrix.toString() }}/>
+            <canvas ref={ovlCanvas} style={{ display:"block", transformOrigin: "0px 0px",  transform: orgMatrix.toString(), position:'relative', top:`${yOffset}px` }}/>
+            <AutoZoom inData={orgData} outDiv={mainDiv} matrix={orgMatrix} />
         </Box>
     )
+}
+
+function setCanvas(orgData: ImageData | null, canvas : React.MutableRefObject<HTMLCanvasElement | null>) {
+    if (orgData && canvas.current) {
+        const width = orgData.width;
+        const height = orgData.height;
+        canvas.current.width = width;
+        canvas.current.height = height;
+        const ctx = canvas.current.getContext('2d');
+        ctx?.putImageData(orgData, 0, 0);
+    }
 }

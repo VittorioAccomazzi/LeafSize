@@ -7,7 +7,7 @@ import ImageLoader from "../../workers/foreground/ImageLoader";
 import Pacer from '../../common/utils/Pacer'
 import { useAppSelector, useAutomaticRedirect, useImagesToProcess } from "../../app/hooks";
 import { selectFiles, selectNumDishes, selectNumLeafs } from "../selection/selectionSlice";
-import LeafSeg from "../../workers/background/LeafSeg";
+import LeafSeg, {BackgroundType} from "../../workers/background/LeafSeg";
 import { selectHue, selectSaturation } from "./settingSlice";
 import useShiftKey from "../../common/useLib/useKeyPress";
 import { imageSize } from "../../app/const";
@@ -24,8 +24,8 @@ export default function Settings() {
     const numLeaf= useAppSelector(selectNumLeafs);
     const imgLoader= useMemo<ImageLoader>(()=>new ImageLoader(fileList, numDishes, imageSize),[fileList, numDishes]);
     const iNumPacer= useMemo<Pacer>(()=>new Pacer(delay),[]);
-    const [imageData,setImageData] = useState<ImageData|null>(null);
-    const [orgData, setOrgData]    = useState<ImageData|null>(null);
+    const [imgData, setImgData] = useState<ImageData|null>(null);
+    const [orgData, setOrgData] = useState<ImageData|null>(null);
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const imagesToProcess = useImagesToProcess(imgLoader.List); 
     const shiftPress= useShiftKey();
@@ -41,7 +41,7 @@ export default function Settings() {
         const index = imgLoader.List.findIndex(v => v===imageName);
         if( index >=0 ){
             const { imgData } = await imgLoader.getImage(index);
-            setImageData(imgData);
+            setImgData(imgData);
             setOrgData(imgData);
         }
     }
@@ -50,8 +50,8 @@ export default function Settings() {
         if( orgData ){
             setIsLoading(true);
             const newImage = new ImageData( new Uint8ClampedArray(orgData.data), orgData.width, orgData.height);
-            LeafSeg.Process(newImage, huethr, satThr, numLeaf );
-            setImageData( newImage);
+            LeafSeg.Process(newImage, huethr, satThr, numLeaf, BackgroundType.Transparent );
+            setImgData(newImage);
             setIsLoading(false);
         }
     }
@@ -73,7 +73,8 @@ export default function Settings() {
             </Box>
             <Box className={css.bottomFrame}>
                 <DisplayPart
-                    imageData={imageData}
+                    orgData={orgData}
+                    ovlData={imgData}
                 />
             </Box>
         </Box>
