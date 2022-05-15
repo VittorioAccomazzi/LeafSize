@@ -5,14 +5,16 @@ import { useEffect } from "react";
 import useCenterPos from "../../../common/useLib/useCenterPos";
 import usePanZoom from "../../../common/useLib/usePanZoom";
 import { ImageData } from "canvas";
-import AutoZoom from './AutoZoom'
+import AutoZoom from './AutoZoom';
+import {EditModeType, EditModes} from '../useEditMode';
 
 interface DisplayPartProp {
     orgData : ImageData | null,
-    ovlData : ImageData | null
+    ovlData : ImageData | null,
+    editMode : EditModeType
 }
 
-export default function DisplayPart({ orgData, ovlData }:DisplayPartProp) {
+export default function DisplayPart({ orgData, ovlData, editMode }:DisplayPartProp) {
     const orgCanvas = useRef<HTMLCanvasElement | null>(null)
     const ovlCanvas = useRef<HTMLCanvasElement | null>(null)
     const mainDiv= useRef<HTMLDivElement|null>(null)
@@ -26,7 +28,7 @@ export default function DisplayPart({ orgData, ovlData }:DisplayPartProp) {
         setCanvas(ovlData, ovlCanvas);       
     },[ovlData])
 
-    const pzMatrix = usePanZoom(mainDiv,[mainDiv])
+    const pzMatrix = usePanZoom(mainDiv, editMode.mode===EditModes.Image, [mainDiv])
     let orgMatrix = useCenterPos(orgCanvas, mainDiv, [orgData?.width, orgData?.height])
     orgMatrix.preMultiplySelf(pzMatrix)
     const yOffset = orgCanvas.current ? -orgCanvas.current.height : 0;

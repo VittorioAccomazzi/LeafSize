@@ -12,6 +12,7 @@ import { selectHue, selectSaturation } from "./settingSlice";
 import useShiftKey from "../../common/useLib/useKeyPress";
 import { imageSize } from "../../app/const";
 import usePageTracking from "../../common/useLib/usePageTracking";
+import useEditMode from "./useEditMode";
 
 
 const delay = 200; // ms to wait for the user to complete the action prior to load the image
@@ -24,11 +25,13 @@ export default function Settings() {
     const numLeaf= useAppSelector(selectNumLeafs);
     const imgLoader= useMemo<ImageLoader>(()=>new ImageLoader(fileList, numDishes, imageSize),[fileList, numDishes]);
     const iNumPacer= useMemo<Pacer>(()=>new Pacer(delay),[]);
+    const thrsPacer= useMemo<Pacer>(()=>new Pacer(delay),[]);
     const [imgData, setImgData] = useState<ImageData|null>(null);
     const [orgData, setOrgData] = useState<ImageData|null>(null);
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const imagesToProcess = useImagesToProcess(imgLoader.List); 
     const shiftPress= useShiftKey();
+    const editMode = useEditMode();
 
 
     // if nothing selected redirect on selection page.
@@ -57,8 +60,8 @@ export default function Settings() {
     }
 
     useEffect(()=>{
-        if( shiftPress ) process();
-    },[orgData])
+        if( shiftPress ) thrsPacer.delayAction(()=>process());
+    },[orgData, huethr, satThr])
 
     return (
         <Box className="fullPage" >
@@ -69,12 +72,14 @@ export default function Settings() {
                     imageChange={(index)=> iNumPacer.delayAction(()=>loadData(index))} 
                     process={process} 
                     isAutoProc ={shiftPress}
+                    editModeState={editMode}
                 />
             </Box>
             <Box className={css.bottomFrame}>
                 <DisplayPart
                     orgData={orgData}
                     ovlData={imgData}
+                    editMode={editMode}
                 />
             </Box>
         </Box>

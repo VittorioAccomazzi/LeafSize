@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { Button, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import css from '../Settings.module.css'
 import PreviousPage from "../../../common/components/NavButtons";
 import { NextPage } from "../../../common/components/NavButtons";
@@ -7,13 +7,15 @@ import { useAppDispatch } from "../../../app/hooks";
 import { setHue, setSaturation } from '../settingSlice';
 import FullSlider from '../../../common/components/FullSlider';
 import { processingPath, selectionPath } from "../../../app/const";
+import {EditModes, EditModeType} from '../useEditMode';
 
 interface SettingPartProp {
     disabled : boolean,
     imageList: string [],
     imageChange : (imageName:string) =>void,
     process : ()=>void,
-    isAutoProc : boolean
+    isAutoProc : boolean,
+    editModeState : EditModeType
 }
 
 const minHue = 50;
@@ -24,10 +26,11 @@ const maxSat = 150;
 const defSat = 91;
 const generateArray = ( min : number, max:number ) => Array(max-min+1).fill(0).map((v,i)=>`${i+min}`)
 
-export default function SettingPart({disabled, imageChange: imageChanges, process, imageList, isAutoProc} : SettingPartProp ) {
+export default function SettingPart({disabled, imageChange: imageChanges, process, imageList, isAutoProc, editModeState} : SettingPartProp ) {
     const hueArray = useMemo<string[]>(()=>generateArray(minHue,maxHue),[]);
     const saturationArray = useMemo<string[]>(()=>generateArray(minSat,maxSat),[]);
     const dispatch  = useAppDispatch();
+    const {mode, setMode} = editModeState;
     
     return (
         <Stack className={css.settigsPart} spacing={2} paddingTop={2} paddingBottom={5} overflow='hidden'>
@@ -51,6 +54,17 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
                 onChange={(index,val)=>{dispatch(setSaturation(parseInt(val)))}}
                 disabled={disabled}
             />
+            <Stack direction='row' spacing={10}>
+                <RadioGroup value={mode} onChange={(e)=>{setMode(e.target.value)}}>
+                    <Stack direction='row' spacing={6}>
+                        <FormControlLabel value={EditModes.Image}    control={<Radio/>} label="Pan and Zoom the image" />
+                        <FormControlLabel value={EditModes.Pathogen} control={<Radio/>} label="Select Pathogen region" />
+                        <FormControlLabel value={EditModes.Leaf}     control={<Radio/>} label="Select leaf region" />
+                    </Stack>
+                </RadioGroup>
+                <Button variant='outlined'> Reset Selection</Button>
+            </Stack>
+
             <Stack direction='row' spacing={10}>
                 <PreviousPage 
                     page={selectionPath}

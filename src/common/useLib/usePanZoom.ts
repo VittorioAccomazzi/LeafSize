@@ -12,6 +12,7 @@ const maxZoom = 10
  * @param deps list of dependencies, which will trigger the reset of the pan and zoom parameters.
  */
 export default function usePanZoom( targetRef :  React.MutableRefObject<HTMLElement | null> ,
+                                    isActive : boolean, 
                                     deps   : React.DependencyList) : DOMMatrix {
     const [mat, setMat] = useState<DOMMatrix>(new DOMMatrix())
     const prvPoint = useRef<umPoint|null>(null)
@@ -108,15 +109,17 @@ export default function usePanZoom( targetRef :  React.MutableRefObject<HTMLElem
             }
         }
 
-        switch( event.device ){
-            case umDeviceTypes.Mouse: 
-                processMouseEvent(event.event as umMouseEvent);
-                break;
-            case umDeviceTypes.Touch:
-                processTouchEvent(event.event as umTouchEvent)
+        if( isActive) {
+            switch( event.device ){
+                case umDeviceTypes.Mouse: 
+                    processMouseEvent(event.event as umMouseEvent);
+                    break;
+                case umDeviceTypes.Touch:
+                    processTouchEvent(event.event as umTouchEvent)
+            }
         }
 
-    },[event]) // eslint-disable-line  react-hooks/exhaustive-deps
+    },[event,isActive]) // eslint-disable-line  react-hooks/exhaustive-deps
 
     return DOMMatrix.fromMatrix(mat) // return a copy to prevent that it gets modified.
 }
