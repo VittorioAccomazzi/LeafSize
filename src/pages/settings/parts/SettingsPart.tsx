@@ -4,7 +4,7 @@ import PreviousPage from "../../../common/components/NavButtons";
 import { NextPage } from "../../../common/components/NavButtons";
 import { useMemo } from "react";
 import { useAppDispatch } from "../../../app/hooks";
-import { setHue, setSaturation } from '../settingSlice';
+import { setHue, setSaturation, resetVals } from '../settingSlice';
 import FullSlider from '../../../common/components/FullSlider';
 import { processingPath, selectionPath } from "../../../app/const";
 import {EditModes, EditModeType} from '../useEditMode';
@@ -62,7 +62,12 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
                         <FormControlLabel value={EditModes.Leaf}     control={<Radio/>} label="Select leaf region" />
                     </Stack>
                 </RadioGroup>
-                <Button variant='outlined'> Reset Selection</Button>
+                <Button 
+                    variant='outlined'
+                    onClick={()=>dispatch(resetVals())}
+                > 
+                    Reset Selection
+                </Button>
             </Stack>
 
             <Stack direction='row' spacing={10}>

@@ -7,7 +7,9 @@ import useMouse, { Point2DOM, umButtonPress, umDeviceTypes, umMouseEvent } from 
 interface AutoZoomProp {
     inData : ImageData|null, // data to magnefy
     outDiv : MutableRefObject<HTMLElement | null> // container div
-    matrix: DOMMatrix
+    matrix: DOMMatrix,
+    radius : number,
+    color : string
 }
 
 
@@ -15,7 +17,7 @@ const show : React.CSSProperties = { display:'block', width:'256px', height:'256
 const hide : React.CSSProperties = { display:'none'};
 const autoZoom = 2;
 
-export default function AutoZoom({inData, outDiv, matrix} : AutoZoomProp){
+export default function AutoZoom({inData, outDiv, matrix, radius, color} : AutoZoomProp){
     const inpImage = useRef<ImageBitmap|null>(null);
     const outCanvas= useRef<HTMLCanvasElement|null>(null);
 
@@ -38,7 +40,7 @@ export default function AutoZoom({inData, outDiv, matrix} : AutoZoomProp){
         const mouseEvent = event.event as umMouseEvent;
         if ( mouseEvent.mousePoint != null ) {
             canvasStyle = show;
-            displayCanvas(matrix, outCanvas.current, inpImage.current, inData, mouseEvent.mousePoint);
+            displayCanvas(matrix, outCanvas.current, inpImage.current, inData, mouseEvent.mousePoint, radius, color);
         }
     }
 
@@ -48,7 +50,7 @@ export default function AutoZoom({inData, outDiv, matrix} : AutoZoomProp){
 }
 
 
-function displayCanvas( settings : DOMMatrix, canvas : HTMLCanvasElement, image : ImageBitmap, inData : ImageData, point : Point) : void {
+function displayCanvas( settings : DOMMatrix, canvas : HTMLCanvasElement, image : ImageBitmap, inData : ImageData, point : Point, radius : number, color : string) : void {
     canvas.width = canvas.clientWidth
     canvas.height= canvas.clientHeight
     let inv = settings.inverse()
@@ -88,7 +90,14 @@ function displayCanvas( settings : DOMMatrix, canvas : HTMLCanvasElement, image 
     ctx.lineTo(cW/2+1,  cH/3)
     ctx.moveTo(cW/2+1,  cH)
     ctx.lineTo(cW/2+1,  2*cH/3) 
-    ctx.stroke()
+    ctx.stroke();
+
+    if( radius > 0 ){
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.arc(cW/2,cH/2,radius * autoZoom,0, 2*Math.PI);
+        ctx.stroke();
+    }
 
     // display the pixel value
     const imX= imPt.x | 0;
