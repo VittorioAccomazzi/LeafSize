@@ -24,6 +24,7 @@ describe('LeafSeg',()=>{
     }
     const targetSize = 1024
     const files = [new FileHandleMock() ]
+    const emptySet = new Set<number>();
 
     test('shall measure the leaf correctly', async()=>{
 
@@ -39,7 +40,7 @@ describe('LeafSeg',()=>{
 
         for( const [idx, name] of imgLoader.List.entries() ){
             const { scale, imgData } = await imgLoader.getImage(idx);
-            const {areas} = await LeafSeg.Process(imgData!, hueThr, satThr, 2);
+            const {areas} = await LeafSeg.Process(imgData!, hueThr, satThr, 2, emptySet, emptySet);
             CanvasUtils.PutImageData(htmlCnv,imgData!);
             const hsh     = await hash(htmlCnv, name );
             areas.forEach((area,index)=>{
@@ -61,7 +62,7 @@ describe('LeafSeg',()=>{
         const hueThr = 68;
         const satThr = 91;
         const { imgData } = await imgLoader.getImage(0);
-        await LeafSeg.Process(imgData!, hueThr, satThr, 2, BackgroundType.Transparent);
+        await LeafSeg.Process(imgData!, hueThr, satThr, 2, emptySet, emptySet, BackgroundType.Transparent);
         CanvasUtils.PutImageData(htmlCnv,imgData!);
         const hsh     = await hash(htmlCnv, 'transparent' );
         expect(hsh).toMatchSnapshot();

@@ -16,6 +16,7 @@ import useEditMode from "./useEditMode";
 
 
 const delay = 200; // ms to wait for the user to complete the action prior to load the image
+const emptySet = new Set<number>(); // 🖐 TEMP only !
 
 export default function Settings() {
     const fileList = useAppSelector(selectFiles);
@@ -53,7 +54,7 @@ export default function Settings() {
         if( orgData ){
             setIsLoading(true);
             const newImage = new ImageData( new Uint8ClampedArray(orgData.data), orgData.width, orgData.height);
-            LeafSeg.Process(newImage, huethr, satThr, numLeaf, BackgroundType.Transparent );
+            LeafSeg.Process(newImage, huethr, satThr, numLeaf, emptySet, emptySet, BackgroundType.Transparent );
             setImgData(newImage);
             setIsLoading(false);
         }

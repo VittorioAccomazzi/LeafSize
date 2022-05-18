@@ -39,6 +39,13 @@ export default class BoundingBox  {
         }
     }
 
+    static FromImage(imageData : ImageData) : Bbox {
+        return {
+            ulc : { x:0, y:0 },
+            size: { width:imageData.width, height:imageData.height}
+        }
+    }
+    
     static get Empty() : Bbox {
         return {
             ulc : {x:0, y:0},
@@ -97,10 +104,7 @@ export default class BoundingBox  {
     }
 
     static CropImage(bbox : Bbox, imageData : ImageData ) : ImageData | null {
-        const imageBox = {
-            ulc : {x:0, y:0},
-            size: {width:imageData.width, height:imageData.height}
-        }
+        const imageBox = BoundingBox.FromImage(imageData)
         
         const int = BoundingBox.Intersect([bbox, imageBox]);
         let res : ImageData | null = null;

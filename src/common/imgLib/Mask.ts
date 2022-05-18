@@ -220,15 +220,24 @@ export default class Mask implements IImage<boolean> {
      * @param imgData 
      * @param color  
      */
-    Overlay(imgData : ImageData, {r,g,b,a =255 } : Colour ) : void {
-        if( this.width !== imgData.width || this.height !== imgData.height ) throw new Error(`Invalid data : Mask size ${this.width}x${this.height} and image data ${imgData.width}x${imgData.height}`)
+    Overlay(imgData : ImageData, {r,g,b,a =255 } : Colour, offset? : Point) : void {
+        if( !offset && ( this.width !== imgData.width || this.height !== imgData.height) ) throw new Error(`Invalid data : Mask size ${this.width}x${this.height} and image data ${imgData.width}x${imgData.height}`)
+        if( offset ) {
+            if( offset.x < 0 || offset.y < 0 ) throw new Error (`negative offset not supported : ${offset.x},${offset.y}`);
+            if( offset.x+this.width > imgData.width || offset.y+this.height> imgData.height ) throw new Error(`Invalid offset : mask shall be completly inside the image ${offset.x+this.width}x${offset.y+this.height} and image ${imgData.width}x${imgData.height}`)
+        }
+        const xOffset = offset ? offset.x : 0;
+        const yOffset = offset ? offset.y : 0;
         const data = imgData.data;
-        let ptr = 0;
+        let ptr = ( yOffset * imgData.width+xOffset) * 4;
         const alpha = a/255;
         r *= alpha;
         b *= alpha;
         g *= alpha;
         const weight = 1-alpha;
+        const imgStride = imgData.width * 4;
+        const maskLast  = ( xOffset + this.width ) * 4;
+        const incr      = ( imgData.width - this.width ) * 4;
 
         this.pixels.forEach((v)=>{
             if( v ){
@@ -244,6 +253,7 @@ export default class Mask implements IImage<boolean> {
             } else {
                 ptr += 4;
             } 
+            if( ptr % imgStride === maskLast ) ptr += incr;
         })
     }
 
