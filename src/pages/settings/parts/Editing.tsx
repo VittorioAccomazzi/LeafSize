@@ -1,14 +1,15 @@
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { CSSProperties, MutableRefObject, useEffect, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch } from "../../../app/hooks";
 import { RootState } from "../../../app/store";
 import useMouse, { Point2DOM, umButtonPress, umDeviceTypes, umMouseEvent } from "../../../common/useLib/useMouse";
 
 interface EditingProp {
-    inData : ImageData|null, // data to magnefy
-    outDiv : MutableRefObject<HTMLElement | null>, // container div
-    style : CSSProperties,
-    matrix : DOMMatrix,
+    inpData : ImageData|null, // data to magnefy
+    ovlData : ImageData|null,
+    outDiv  : MutableRefObject<HTMLElement | null>, // container div
+    style   : CSSProperties,
+    matrix  : DOMMatrix,
     isActive : boolean,
     radius : number, 
     color : string,
@@ -17,32 +18,34 @@ interface EditingProp {
 }
 
 
-export default function Editing ({inData, outDiv, style, matrix, isActive, radius, color, addValues, stateSelector} : EditingProp) {
+export default function Editing ({inpData, ovlData, outDiv, style, matrix, isActive, radius, color, addValues, stateSelector} : EditingProp) {
     const canvas = useRef<HTMLCanvasElement|null>(null);
     const ctx = useRef<CanvasRenderingContext2D|null>(null)
-    const state = useAppSelector(stateSelector);
     const dispatch = useAppDispatch();
 
     useEffect(()=>{
-        if( inData && canvas.current ){
+        if( inpData && canvas.current ){
             canvas.current.style.backgroundColor = "#00000000";
-            canvas.current.width = inData.width;
-            canvas.current.height= inData.height;
+            canvas.current.width = inpData.width;
+            canvas.current.height= inpData.height;
             ctx.current = canvas.current.getContext('2d');
         }
-    },[inData])
+    },[inpData])
 
-    if( state.size === 0 && ctx.current){
-        ctx.current.clearRect(0,0,ctx.current.canvas.width,ctx.current.canvas.height);
-    }
+    useEffect(()=>{
+        if( ovlData && ctx.current) ctx.current.clearRect(0,0,ctx.current.canvas.width,ctx.current.canvas.height);
+
+    },[ovlData, ctx])
 
     const event = useMouse(outDiv)
-    if( isActive && ctx.current && event.device === umDeviceTypes.Mouse  ){
-        const mouseEvent = event.event as umMouseEvent;
-        const values = handleMouse(mouseEvent, inData, ctx.current, matrix, radius, color);
-        if( values.length > 0 ) dispatch(addValues(values));
-    }
-    
+    useEffect(()=>{
+        if( isActive && ctx.current && event.device === umDeviceTypes.Mouse  ){
+            const mouseEvent = event.event as umMouseEvent;
+            const values = handleMouse(mouseEvent, inpData, ctx.current, matrix, radius, color);
+            if( values.length > 0 ) dispatch(addValues(values));
+        }
+    },[event, isActive, ctx])
+
     return (
         <canvas ref={canvas} style={style}/>
     )
@@ -81,7 +84,7 @@ function handleMouse( mouseEvent : umMouseEvent, inData : ImageData | null, ctx 
                         const r = inData.data[offset++];
                         const g = inData.data[offset++];
                         const b = inData.data[offset++];
-                        values.push(r<<16|g<<8|b);
+                        values.push((r<<16)|(g<<8)|(b));
                     }
                 }
             }

@@ -1,3 +1,4 @@
+import Masks  from './Mask'
 import BoundingBox from "./BoundingBox";
 
 
@@ -89,5 +90,34 @@ describe('Bounding Box', ()=>{
         }
         expect(BoundingBox.IsEmpty(box1)).toBeTruthy();
         expect(BoundingBox.IsEmpty(box2)).toBeFalsy();
+    })
+
+    test('Shall crop Mask', ()=>{
+        const rndPixel = ()=>Math.random() < 0.5;
+        const width = 123;
+        const height= 182;
+        const lrgMask = new Masks(width, height);
+        const lrgPixels = lrgMask.imagePixels;
+        lrgPixels.forEach((v,i)=>lrgPixels[i]=rndPixel()); // random mask
+        const bbox = BoundingBox.FromValues(13, 8, 121, 99);
+        const smlMask = BoundingBox.CropMask(bbox, lrgMask);
+        expect(smlMask.area).toBeLessThanOrEqual(lrgMask.area);
+        smlMask.foreachPixel((x,y,v)=>{
+            const xLrg = x + bbox.ulc.x;
+            const yLrg = y + bbox.ulc.y;
+            expect(lrgMask.get(xLrg,yLrg)).toBe(v)
+        })
+    })
+
+    test('shall crop mask and handle case in which the mask is outside', ()=>{
+        const lrgMask = new Masks( 21, 81);
+        lrgMask.set(10,50, true);
+        expect( lrgMask.area).toBe(1);
+        const bbox = BoundingBox.FromValues(9,49, 200, 500);
+        const smlMask = BoundingBox.CropMask(bbox, lrgMask);
+        expect(smlMask.width).toBeLessThan(bbox.size.width);
+        expect(smlMask.height).toBeLessThan(bbox.size.height);
+        expect(smlMask.area).toBe(1);
+        expect(smlMask.get(1,1)).toBe(true);
     })
 })

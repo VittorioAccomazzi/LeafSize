@@ -7,6 +7,7 @@ import LeafCrop from "./LeafCrop";
 describe('LeafCrop', ()=>{
 
     BoundingBox.SetImageDataAllocator(nodeCanvasImageDataAllocator);
+    const leafArea = {leaf:10, path:2};
 
     test('shall crop the image',async ()=> {
         const width = 512;
@@ -21,7 +22,7 @@ describe('LeafCrop', ()=>{
         ctx.rect(bbx.ulc.x,bbx.ulc.y, bbx.size.width, bbx.size.height);
         ctx.stroke();
         const imgData = ctx.getImageData(0,0,width,height);
-        const res = LeafCrop.Process([10], [bbx], imgData, 1);
+        const res = LeafCrop.Process([leafArea], [bbx], imgData, 1);
         const cnv = new Canvas(res.imgData.width, res.imgData.height );
         const cts = cnv.getContext('2d');
         cts.putImageData(res.imgData, 0,0)
@@ -44,7 +45,7 @@ describe('LeafCrop', ()=>{
         bbxs.forEach(bbx => ctx.rect(bbx.ulc.x,bbx.ulc.y, bbx.size.width, bbx.size.height))
         ctx.stroke();
         const imgData = ctx.getImageData(0,0,width,height);
-        const res = LeafCrop.Process([10], bbxs, imgData, 1);
+        const res = LeafCrop.Process([leafArea], bbxs, imgData, 1);
         const cnv = new Canvas(res.imgData.width, res.imgData.height );
         const cts = cnv.getContext('2d');
         cts.putImageData(res.imgData, 0,0)
@@ -67,7 +68,7 @@ describe('LeafCrop', ()=>{
         bbxs.forEach(bbx => ctx.rect(bbx.ulc.x,bbx.ulc.y, bbx.size.width, bbx.size.height))
         ctx.stroke();
         const imgData = ctx.getImageData(0,0,width,height);
-        const res = LeafCrop.Process([10], [], imgData, 1);
+        const res = LeafCrop.Process([leafArea], [], imgData, 1);
         const cnv = new Canvas(res.imgData.width, res.imgData.height );
         const cts = cnv.getContext('2d');
         cts.putImageData(res.imgData, 0,0)

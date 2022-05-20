@@ -8,13 +8,13 @@ import { useEffect, useMemo, useState } from "react";
 import ImageLoader from "../../workers/foreground/ImageLoader";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {addImagesToFinalized, ImageFinalized, selectFinalized} from './ProcessSlice'
-
 import { selectFiles, selectNumDishes, selectNumLeafs } from "../selection/selectionSlice";
-import { selectHue, selectSaturation } from "../settings/settingSlice";
+import { selectHue, selectLeafVals, selectPathVals, selectSaturation } from "../settings/settingSlice";
 import ImageProcessor from "../../workers/foreground/ImageProcessor";
 import ProcessResult from "./ProcessResult";
 import usePageTracking from "../../common/useLib/usePageTracking";
 import GA from "../../common/utils/GA";
+import { LeafArea } from "./ProcessSlice";
 
 export default function Process() {
     const fileList = useAppSelector(selectFiles);
@@ -22,6 +22,8 @@ export default function Process() {
     const huethr   = useAppSelector(selectHue);
     const satThr   = useAppSelector(selectSaturation);
     const numLeaf  = useAppSelector(selectNumLeafs);
+    const leafVals = useAppSelector(selectLeafVals);
+    const pathVals = useAppSelector(selectPathVals);
     const dispatch  = useAppDispatch();
     const imgFinalized = useAppSelector(selectFinalized);
     const [perc, setPerc] = useState<number>(0)
@@ -37,7 +39,9 @@ export default function Process() {
             imagesToProcess.length,
             huethr, 
             satThr,
-            numLeaf
+            numLeaf,
+            [...leafVals],
+            [...pathVals]
          ),[])
 
         // if nothing selected redirect on seletion page.
@@ -70,7 +74,7 @@ export default function Process() {
          }
 
          // images result.
-         const onResult = (name: string, areas : number [] ) => {
+         const onResult = (name: string, areas : LeafArea [] ) => {
             const item = { name, areas };
             setFinalized((state)=>[...state,item])
          }

@@ -6,6 +6,7 @@
 // Using the model directly supported by Webpack 5 https://webpack.js.org/guides/web-workers/
 //
 
+import { LeafArea } from "../../pages/process/ProcessSlice";
 import { imageSize } from "../../app/const";
 import ImageLoader from "../foreground/ImageLoader";
 import LeafCrop from "./LeafCrop";
@@ -17,22 +18,23 @@ export interface QueryMessage {
     name    : string,
     hueThr  : number, 
     satThr  : number, 
-    nLeafs  : number 
-}
-export interface AnswerMessage {
-    imgData : ImageData, 
-    areas   : number[]
+    nLeafs  : number,
+    leafVals: number [],
+    pathVals: number []
 }
 
-const emptySet = new Set<number>(); // 🖐 TEMP only !
+export interface AnswerMessage {
+    imgData : ImageData, 
+    areas   : LeafArea[]
+}
 
 /* eslint-disable-next-line no-restricted-globals */
 self.onmessage=async (ev:MessageEvent<QueryMessage>)=> {
-    const {file, name, nDishes, hueThr, satThr, nLeafs } = ev.data
+    const {file, name, nDishes, hueThr, satThr, nLeafs, leafVals, pathVals } = ev.data
     const imgLoader = new ImageLoader([file], nDishes, imageSize);
     const imgIndex  = imgLoader.List.indexOf(name);
     const {imgData, scale} = await imgLoader.getImage(imgIndex)
-    const {areas, bboxs } = LeafSeg.Process(imgData!, hueThr, satThr, nLeafs, emptySet, emptySet);
+    const {areas, bboxs } = LeafSeg.Process(imgData!, hueThr, satThr, nLeafs, new Set(leafVals), new Set(pathVals));
     const result = LeafCrop.Process(areas, bboxs, imgData!, scale);
     sendMessage(result);
 }

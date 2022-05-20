@@ -137,6 +137,12 @@ export default class Mask implements IImage<boolean> {
         })
     }
 
+    /**
+     * if the mask has dimension 0.
+     */
+    get IsEmpty() : boolean {
+        return !this.w || !this.pixels.length;
+    }
 
     /**
      * Fill operation : retun a mask with the connected compnent (9 neighbourd) to the seed point.
@@ -191,6 +197,7 @@ export default class Mask implements IImage<boolean> {
      * @returns 
      */
     Dilate(halfSize:number ) : Mask {
+        if ( this.IsEmpty ) return new Mask(0,0);
         const width = this.width;
         const height= this.height;
         const inpPixels = this.pixels;

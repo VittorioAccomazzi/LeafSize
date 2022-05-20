@@ -2,10 +2,11 @@ import { AnswerMessage } from "../background/LeafSegWorker";
 import WorkerPool from "../../common/webworkers/WorkerPool";
 import Scheduler from "../../common/webworkers/Scheduler";
 import ImageLoader from "./ImageLoader";
+import { LeafArea } from "../../pages/process/ProcessSlice";
 
 
 export interface Result {
-    areas : number[], 
+    areas : LeafArea[], 
     imgData : ImageData
 }
 
@@ -13,7 +14,9 @@ interface WorkerPayload {
     name  : string,
     hueThr : number, 
     satThr : number, 
-    nLeafs : number
+    nLeafs : number,
+    leafVals : number [],
+    pathVals : number []
 }
 
 export default class LeafSegProxy {
@@ -32,9 +35,9 @@ export default class LeafSegProxy {
         this.scheduler.dispose();
     }
 
-    async process(name : string, hueThr : number, satThr : number, nLeafs : number ) :  Promise<Result|null>  {
-        const queryMessage = { name, hueThr, satThr, nLeafs };
-        const answerMessage= await this.scheduler.execute(queryMessage);
+    async process(name : string, hueThr : number, satThr : number, nLeafs : number, leafVals : number [], pathVals : number [] ) :  Promise<Result|null>  {
+        const workerPayload = { name, hueThr, satThr, nLeafs, leafVals, pathVals };
+        const answerMessage= await this.scheduler.execute(workerPayload);
         return answerMessage;
     }
 
@@ -48,7 +51,7 @@ export default class LeafSegProxy {
         const name    = msg.name;
         const file    = this.imgLoader.FileHandle(name);
         const nDishes = this.imgLoader.NumDishes;
-        const queryMessage = { name, file, nDishes, hueThr : msg.hueThr, satThr : msg.satThr, nLeafs : msg.nLeafs }
+        const queryMessage = { name, file, nDishes, hueThr : msg.hueThr, satThr : msg.satThr, nLeafs : msg.nLeafs, leafVals : msg.leafVals, pathVals : msg.pathVals }
         return new Promise(res=>{
             const worker = LeafSegProxy.pool.get();
             worker.onmessage = ((ev:MessageEvent<AnswerMessage>)=>{

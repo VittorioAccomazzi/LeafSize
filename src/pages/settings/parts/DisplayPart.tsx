@@ -46,7 +46,8 @@ export default function DisplayPart({ orgData, ovlData, editMode }:DisplayPartPr
             <canvas ref={orgCanvas} style={{ display:"block", transformOrigin: "0px 0px",  transform: orgMatrix.toString() }}/>
             <canvas ref={ovlCanvas} style={{ display:"block", transformOrigin: "0px 0px",  transform: orgMatrix.toString(), position:'relative', top:`${yOffset}px` }}/>
             <Editing 
-                inData={orgData} 
+                inpData={orgData} 
+                ovlData={ovlData}
                 outDiv={mainDiv} 
                 matrix={orgMatrix}  
                 radius={radiusSize} 
@@ -57,7 +58,8 @@ export default function DisplayPart({ orgData, ovlData, editMode }:DisplayPartPr
                 style={{ display:"block", transformOrigin: "0px 0px",  transform: orgMatrix.toString(), position:'relative', top:`${2*yOffset}px` }} 
             />
             <Editing 
-                inData={orgData} 
+                inpData={orgData} 
+                ovlData={ovlData}
                 outDiv={mainDiv} 
                 matrix={orgMatrix}  
                 radius={radiusSize} 

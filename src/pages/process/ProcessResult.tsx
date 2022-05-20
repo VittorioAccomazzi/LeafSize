@@ -7,12 +7,13 @@ import { Box, Button } from "@mui/material";
 import AreaInfo from "./AreaInfo";
 import css from './Process.module.css'
 import { Result } from "../../workers/foreground/LeafSegProxy";
+import { LeafArea } from "./ProcessSlice";
 
 export interface ProcessResultProp {
     name : string,
     imageProcessor : ImageProcessing,
     onDelete : (name:string)=>void,
-    onResult : (name:string, areas: number[] ) =>void,
+    onResult : (name:string, areas: LeafArea[] ) =>void,
     allowDelete : boolean
 }
 export default function ProcessResult ( { name, imageProcessor, onDelete, onResult, allowDelete } : ProcessResultProp) {
@@ -20,7 +21,7 @@ export default function ProcessResult ( { name, imageProcessor, onDelete, onResu
     const root = useRef<HTMLDivElement | null>(null)   
     const [ready, setReady] = useState<boolean>(false);
     const [hide, setHide]   = useState<boolean>(false);
-    const [areas, setAreas] = useState<number[]>([])
+    const [areas, setAreas] = useState<LeafArea[]>([])
     const mouseOver = useMouseOver(root)
 
     useEffect(()=>{

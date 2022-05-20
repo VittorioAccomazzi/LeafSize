@@ -44,7 +44,7 @@ describe('LeafSeg',()=>{
             CanvasUtils.PutImageData(htmlCnv,imgData!);
             const hsh     = await hash(htmlCnv, name );
             areas.forEach((area,index)=>{
-                const rescaled = area / ( scale * scale );
+                const rescaled = area.leaf / ( scale * scale );
                 const target   = refArea[idx][index];
                 const percErr  = Math.abs(rescaled-target)/target *100;
                 expect(percErr).toBeLessThan(error);

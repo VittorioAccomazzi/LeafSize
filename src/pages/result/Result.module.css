@@ -27,6 +27,9 @@
     padding: 12px;
 }
 
-.tableContainer {
-   width:512px !important;
+.tableContainer2 {
+   width:800px !important;
 }
+.tableContainer1 {
+    width:480px !important;
+ }

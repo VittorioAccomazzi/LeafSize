@@ -8,7 +8,7 @@ import Pacer from '../../common/utils/Pacer'
 import { useAppSelector, useAutomaticRedirect, useImagesToProcess } from "../../app/hooks";
 import { selectFiles, selectNumDishes, selectNumLeafs } from "../selection/selectionSlice";
 import LeafSeg, {BackgroundType} from "../../workers/background/LeafSeg";
-import { selectHue, selectSaturation } from "./settingSlice";
+import { selectHue, selectLeafVals, selectPathVals, selectSaturation } from "./settingSlice";
 import useShiftKey from "../../common/useLib/useKeyPress";
 import { imageSize } from "../../app/const";
 import usePageTracking from "../../common/useLib/usePageTracking";
@@ -16,7 +16,6 @@ import useEditMode from "./useEditMode";
 
 
 const delay = 200; // ms to wait for the user to complete the action prior to load the image
-const emptySet = new Set<number>(); // 🖐 TEMP only !
 
 export default function Settings() {
     const fileList = useAppSelector(selectFiles);
@@ -24,6 +23,8 @@ export default function Settings() {
     const huethr = useAppSelector(selectHue);
     const satThr = useAppSelector(selectSaturation);
     const numLeaf= useAppSelector(selectNumLeafs);
+    const leafVals = useAppSelector(selectLeafVals);
+    const pathVals = useAppSelector(selectPathVals);
     const imgLoader= useMemo<ImageLoader>(()=>new ImageLoader(fileList, numDishes, imageSize),[fileList, numDishes]);
     const iNumPacer= useMemo<Pacer>(()=>new Pacer(delay),[]);
     const thrsPacer= useMemo<Pacer>(()=>new Pacer(delay),[]);
@@ -54,7 +55,7 @@ export default function Settings() {
         if( orgData ){
             setIsLoading(true);
             const newImage = new ImageData( new Uint8ClampedArray(orgData.data), orgData.width, orgData.height);
-            LeafSeg.Process(newImage, huethr, satThr, numLeaf, emptySet, emptySet, BackgroundType.Transparent );
+            LeafSeg.Process(newImage, huethr, satThr, numLeaf, leafVals, pathVals, BackgroundType.Transparent );
             setImgData(newImage);
             setIsLoading(false);
         }

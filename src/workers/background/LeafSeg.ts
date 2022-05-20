@@ -2,6 +2,7 @@ import BoundingBox from "../../common/imgLib/BoundingBox";
 import ColourModels from "../../common/imgLib/ColourModels";
 import Mask from "../../common/imgLib/Mask";
 import { Bbox, Colour, Point } from "../../common/imgLib/Types";
+import { LeafArea } from "../../pages/process/ProcessSlice";
 
 export enum BackgroundType {
     Image,
@@ -28,43 +29,55 @@ export default class LeafSeg {
      * @param nLeafs number of leafs 1 or 2
      * @returns areas : array with the areas measured, bboxs : bounding box for each leaf measured.
      */
-    static Process(imgData : ImageData, hueThr : number, satThr : number, nLeafs : number, leafSet : Set<number>, pathSet:Set<number>, backgroundType: BackgroundType = BackgroundType.Image ) :  { areas : number[], bboxs : Bbox[] }  {
+    static Process(imgData : ImageData, hueThr : number, satThr : number, nLeafs : number, leafSet : Set<number>, pathSet:Set<number>, backgroundType: BackgroundType = BackgroundType.Image ) :  { areas : LeafArea[], bboxs : Bbox[] }  {
 
-        const leafs = LeafSeg.leafs(imgData, hueThr, satThr, nLeafs);
-        const res   = LeafSeg.overlay(leafs, imgData, backgroundType);
+        const leaves = LeafSeg.leafs(imgData, hueThr, satThr, nLeafs);
+        const pathogen= LeafSeg.pathogen(leaves, imgData, leafSet, pathSet);
+        const res    = LeafSeg.overlay(leaves, pathogen, imgData, backgroundType);
         return res;
     }
 
     private static pathogen ( leaves : Mask [], imgData : ImageData, leafSet : Set<number>, pathSet:Set<number> ) {
         const pathMasks : MaskWithLocation [] = [];
 
-        leaves.forEach(leaf=>{
-            const path = LeafSeg.getPathMask(leaf, imgData, leafSet, pathSet );
-            pathMasks.push(path);
-        })
+        if( pathSet.size > 0 ){
+            leaves.forEach(leaf=>{
+                const path = LeafSeg.getPathMask(leaf, imgData, leafSet, pathSet );
+                pathMasks.push(path);
+            })
+        }
 
         return pathMasks;
     }
 
-    private static overlay( leafs : Mask [], imgData : ImageData, backgroundType : BackgroundType ) {
-        let areas: number[] = [];
+    private static overlay( leafs : Mask [], pathogen : MaskWithLocation[], imgData : ImageData, backgroundType : BackgroundType ) {
+        let areas: LeafArea[] = [];
         let bboxs: Bbox[]= [];
 
         // overlay
         const colours : Colour [] = [{r:255,g:0,b:0},{r:255,g:255,b:0}];
+        const pathColor : Colour =  {r:255, g:128, b:0};
 
         // set background
         LeafSeg.setBackground(backgroundType, imgData);
 
         leafs.forEach((m, i)=>{
             const col  = colours[i%colours.length];
-            const area = m.area;
+            const leaf = m.area;
             const bbox = m.Boundaries();
-            areas.push(area);
+            const path = pathogen[i]?.mask.area ?? 0;
+            areas.push({leaf,path});
             bboxs.push(bbox);
             const dil  = m.Dilate(1);
             dil.Minus(m); // this is the outline.
             dil.Overlay(imgData, col);  
+        })
+
+        pathogen.forEach(({mask, ulc})=>{
+            mask.Not();
+            const dMask = mask.Dilate(1);
+            dMask.Minus(mask);
+            dMask.Overlay(imgData, pathColor, ulc)
         })
 
         return {areas, bboxs}
@@ -108,11 +121,45 @@ export default class LeafSeg {
     }
 
     private static getPathMask(leaf : Mask, imgData : ImageData, leafSet : Set<number>, pathSet:Set<number>  ) : MaskWithLocation {
-        const mBox = leaf.Boundaries();
-        const dBox = BoundingBox.Dilate(mBox, 1, 1);
-        const path = new Mask(dBox.size.width, dBox.size.height);
+        const tMask = new Mask(leaf.width, leaf.height);
+        const lPixels = leaf.imagePixels;
+        const pPixels = tMask.imagePixels;
+        const {data} = imgData;
+        let ptr = 0;
 
-        // To do !!
+        // Threshold the image
+        lPixels.forEach((v,i)=>{
+            if( v ){
+                const r = data[ptr++];
+                const g = data[ptr++];
+                const b = data[ptr++];
+                ptr++; // alpha
+                const val = ( r << 16 ) | ( g << 8 ) | (b);
+                pPixels[i] = !leafSet.has(val) && pathSet.has(val);
+            } else {
+                ptr += 4;
+            }
+        })
+
+        // dilate the image
+        const dMask = tMask.Dilate(1);
+
+        // Crop 
+        const bbox = dMask.Boundaries();
+        const dBox = BoundingBox.Dilate(bbox, 1, 1);
+        const cMask= BoundingBox.CropMask(dBox, dMask);
+
+        // fill holes and opening.
+        cMask.Not(); // backgound mask
+        let bMask = cMask.Fill(0,0); 
+        bMask = bMask.Dilate(2); // erosion
+        bMask.Not(); // foreground mask
+        bMask = bMask.Dilate(2); // dilation
+
+
+        // get largest component or an empty mask
+        const  comp = bMask.Components(1);
+        let path = comp.length ? comp[0] : new Mask(0,0)
 
         return {
             mask : path,
