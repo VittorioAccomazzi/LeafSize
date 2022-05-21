@@ -3,6 +3,7 @@ import { CSSProperties, MutableRefObject, useEffect, useRef } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { RootState } from "../../../app/store";
 import useMouse, { Point2DOM, umButtonPress, umDeviceTypes, umMouseEvent } from "../../../common/useLib/useMouse";
+import LeafSeg from "../../../workers/background/LeafSeg";
 
 interface EditingProp {
     inpData : ImageData|null, // data to magnefy
@@ -84,7 +85,7 @@ function handleMouse( mouseEvent : umMouseEvent, inData : ImageData | null, ctx 
                         const r = inData.data[offset++];
                         const g = inData.data[offset++];
                         const b = inData.data[offset++];
-                        values.push((r<<16)|(g<<8)|(b));
+                        values.push(LeafSeg.Pack(r,g,b));
                     }
                 }
             }

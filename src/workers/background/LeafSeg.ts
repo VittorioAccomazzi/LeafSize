@@ -37,6 +37,10 @@ export default class LeafSeg {
         return res;
     }
 
+    public static Pack(r:number, g:number,b:number) : number {
+        return (r<<16)|(g<<8)|b;
+    }
+
     private static pathogen ( leaves : Mask [], imgData : ImageData, leafSet : Set<number>, pathSet:Set<number> ) {
         const pathMasks : MaskWithLocation [] = [];
 
@@ -134,7 +138,7 @@ export default class LeafSeg {
                 const g = data[ptr++];
                 const b = data[ptr++];
                 ptr++; // alpha
-                const val = ( r << 16 ) | ( g << 8 ) | (b);
+                const val = LeafSeg.Pack(r,g,b);
                 pPixels[i] = !leafSet.has(val) && pathSet.has(val);
             } else {
                 ptr += 4;
