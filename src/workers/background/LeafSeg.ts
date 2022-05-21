@@ -56,7 +56,6 @@ export default class LeafSeg {
     // necessary for service worker where the URLParam is initialized latter
     public static  SetPackFunction() {
         LeafSeg.Pack = LeafSeg.SelectDefaultPacking();
-        
     }
 
     private static SelectDefaultPacking () : (r:number, g:number,b:number) => number  {

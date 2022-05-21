@@ -3,8 +3,8 @@ import css from '../Settings.module.css'
 import PreviousPage from "../../../common/components/NavButtons";
 import { NextPage } from "../../../common/components/NavButtons";
 import { useMemo } from "react";
-import { useAppDispatch } from "../../../app/hooks";
-import { setHue, setSaturation, resetVals } from '../settingSlice';
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { setHue, setSaturation, resetVals, selectHue, selectSaturation } from '../settingSlice';
 import FullSlider from '../../../common/components/FullSlider';
 import { processingPath, selectionPath } from "../../../app/const";
 import {EditModes, EditModeType} from '../useEditMode';
@@ -20,16 +20,18 @@ interface SettingPartProp {
 
 const minHue = 50;
 const maxHue = 200;
-const defHue = 68;
 const minSat = 0;
 const maxSat = 150;
-const defSat = 91;
 const generateArray = ( min : number, max:number ) => Array(max-min+1).fill(0).map((v,i)=>`${i+min}`)
 
 export default function SettingPart({disabled, imageChange: imageChanges, process, imageList, isAutoProc, editModeState} : SettingPartProp ) {
     const hueArray = useMemo<string[]>(()=>generateArray(minHue,maxHue),[]);
     const saturationArray = useMemo<string[]>(()=>generateArray(minSat,maxSat),[]);
     const dispatch  = useAppDispatch();
+    const hue = useAppSelector(selectHue);
+    const sat = useAppSelector(selectSaturation);
+    const hueDef = useMemo<number>(()=>hue,[]); // eslint-disable-line  react-hooks/exhaustive-deps
+    const satDef = useMemo<number>(()=>sat,[]); // eslint-disable-line  react-hooks/exhaustive-deps
     const {mode, setMode} = editModeState;
     
     return (
@@ -43,14 +45,14 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
             <FullSlider
                 label="Hue"
                 values={hueArray}
-                defaultIndex={defHue-minHue}
+                defaultIndex={hueDef-minHue}
                 onChange={(index,val)=>{dispatch(setHue(parseInt(val)))}}
                 disabled={disabled}
             />
             <FullSlider
                 label="Saturation"
                 values={saturationArray}
-                defaultIndex={defSat-minSat}
+                defaultIndex={satDef-minSat}
                 onChange={(index,val)=>{dispatch(setSaturation(parseInt(val)))}}
                 disabled={disabled}
             />
