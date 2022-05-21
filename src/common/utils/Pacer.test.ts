@@ -8,7 +8,7 @@ describe('Pacer', ()=>{
         const pacer = new Pacer(delay);
         pacer.delayAction(()=>{
             const end = Date.now();
-            expect(end-start).toBeGreaterThanOrEqual(delay)
+            expect(end-start).toBeGreaterThanOrEqual(delay*0.95);// 5% tollerance
         })
     })
 

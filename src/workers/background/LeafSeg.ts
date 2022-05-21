@@ -1,3 +1,4 @@
+import URLParams from "../../app/urlParams";
 import BoundingBox from "../../common/imgLib/BoundingBox";
 import ColourModels from "../../common/imgLib/ColourModels";
 import Mask from "../../common/imgLib/Mask";
@@ -37,10 +38,95 @@ export default class LeafSeg {
         return res;
     }
 
-    public static Pack(r:number, g:number,b:number) : number {
-        return (r<<16)|(g<<8)|b;
+    /**
+     * Packing Functions
+     * these are the function which packs the RGB values for the pathogen segementation.
+     * the colour model and the channel used in the packing heavily affect the generalization
+     * of the segmentation process.  See https://github.com/VittorioAccomazzi/LeafSize/issues/9
+     * @param r 
+     * @param g 
+     * @param b 
+     * @returns token which encode the color's value.
+     */
+
+    // Note typescript dosn't directly support static constructors, and here I'm effectively
+    // creating one with an auto evaluation function
+    public static Pack : (r:number, g:number,b:number) => number = LeafSeg.SelectDefaultPacking();
+
+    // necessary for service worker where the URLParam is initialized latter
+    public static  SetPackFunction() {
+        LeafSeg.Pack = LeafSeg.SelectDefaultPacking();
+        
     }
 
+    private static SelectDefaultPacking () : (r:number, g:number,b:number) => number  {
+        let pack = LeafSeg.LabPack;
+        switch(URLParams.PackMode) {
+            case "RGB" : {
+                pack = LeafSeg.RgbPack;
+                break;
+            }
+            case "HSV": {
+                pack = LeafSeg.HsvPack;
+                break;
+            }
+        }
+        return pack;
+    }  
+
+    /**
+     * Packing function using the RGB component. Low generalization, but very easy control
+     * on the reagion to select.
+     */
+    private static RgbPack(r:number, g:number,b:number) : number {
+        return (r<<16)|(g<<8)|b
+    }
+
+    /**
+     * Packing function using the HSV model. 
+     */
+    private static HsvPack(r:number, g:number,b:number) : number {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        
+       let {h,s,v} = ColourModels.Rgb2Hsv(r,g,b);
+
+       h = h|0;
+       s = (s*255)|0
+
+       return (h<<8)|s 
+    }
+
+    /**
+     *  Packing function using the Lab model. Very good generalization, for tomato leaves.
+     */
+    private static LabPack(r:number, g:number,b:number) : number {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        
+       let {l,a,b:bb} = ColourModels.Rgb2Lab(r,g,b);
+
+       a  = (a*255/256)|0;
+       bb = (bb*255/256)|0; 
+       a  += 128;
+       bb += 128;
+
+       //if( a< 0 || a > 255 ) throw Error(`a is ${a}`);
+       //if( bb<0 || bb> 255 ) throw Error (`b is ${b}`)
+
+       return (a<<8)|bb 
+    }
+
+    /**
+     * Segment the pathogen areas of the leaves.
+     * @param leaves 
+     * @param imgData 
+     * @param leafSet 
+     * @param pathSet 
+     * @returns 
+     */
     private static pathogen ( leaves : Mask [], imgData : ImageData, leafSet : Set<number>, pathSet:Set<number> ) {
         const pathMasks : MaskWithLocation [] = [];
 

@@ -51,7 +51,7 @@ export default class LeafSegProxy {
         const name    = msg.name;
         const file    = this.imgLoader.FileHandle(name);
         const nDishes = this.imgLoader.NumDishes;
-        const queryMessage = { name, file, nDishes, hueThr : msg.hueThr, satThr : msg.satThr, nLeafs : msg.nLeafs, leafVals : msg.leafVals, pathVals : msg.pathVals }
+        const queryMessage = { name, file, nDishes, hueThr : msg.hueThr, satThr : msg.satThr, nLeafs : msg.nLeafs, leafVals : msg.leafVals, pathVals : msg.pathVals, urlParam : window.location.search }
         return new Promise(res=>{
             const worker = LeafSegProxy.pool.get();
             worker.onmessage = ((ev:MessageEvent<AnswerMessage>)=>{

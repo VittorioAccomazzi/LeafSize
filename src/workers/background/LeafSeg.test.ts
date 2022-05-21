@@ -123,10 +123,10 @@ describe('LeafSeg',()=>{
         }
 
         const res = [
-            { leaf: 34325, path :6587 }, { leaf: 29743, path :6103 },
-            { leaf: 41828, path :6776 }, { leaf: 28623, path :4921 },
-            { leaf: 20141, path :9643 }, { leaf: 16121, path :6131 },
-            { leaf: 38463, path :5858 }, { leaf: 31542, path :9307 }
+            { leaf: 34325, path :7473 }, { leaf: 29743, path :6896 },
+            { leaf: 41828, path :8142 }, { leaf: 28623, path :6588 },
+            { leaf: 20141, path :10739}, { leaf: 16121, path :7337 },
+            { leaf: 38463, path :7423 }, { leaf: 31542, path :10774}
         ]
 
         for( const [idx, name] of imgLoader.List.entries() ){
@@ -141,7 +141,7 @@ describe('LeafSeg',()=>{
                 const pathBaseline = res[baseIndex+index].path;
                 expect(Math.abs(leaf-leafBaseline)).toBeLessThan(error/100*leafBaseline);
                 expect(Math.abs(path-pathBaseline)).toBeLessThan(error/100*pathBaseline);
-            })
+            }) 
         } 
     })
 
