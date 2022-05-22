@@ -64,6 +64,7 @@ export default function FullSlider( { label, values, disabled, defaultIndex =0, 
                 data-testid="result-label"
                 className="resultLabel"
                 sx={{fontSize:'small', padding:'2px'}}
+                
              >
                 {values[imageNum]}
             </FormLabel>

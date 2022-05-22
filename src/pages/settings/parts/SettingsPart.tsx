@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
+import { Box, Button, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import css from '../Settings.module.css'
 import PreviousPage from "../../../common/components/NavButtons";
 import { NextPage } from "../../../common/components/NavButtons";
@@ -8,6 +8,7 @@ import { setHue, setSaturation, resetVals, selectHue, selectSaturation } from '.
 import FullSlider from '../../../common/components/FullSlider';
 import { processingPath, selectionPath } from "../../../app/const";
 import {EditModes, EditModeType} from '../useEditMode';
+import Outline from '../../../common/components/Outline';
 
 interface SettingPartProp {
     disabled : boolean,
@@ -36,42 +37,47 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
     
     return (
         <Stack className={css.settigsPart} spacing={2} paddingTop={2} paddingBottom={5} overflow='hidden'>
+            <Outline label="Leaves Selection">
+            <Box width='85em' style={{justifyContent:'center'}}>
+                    <FullSlider
+                        label="Hue"
+                        values={hueArray}
+                        defaultIndex={hueDef-minHue}
+                        onChange={(index,val)=>{dispatch(setHue(parseInt(val)))}}
+                        disabled={disabled}
+                    />
+                    <FullSlider
+                        label="Saturation"
+                        values={saturationArray}
+                        defaultIndex={satDef-minSat}
+                        onChange={(index,val)=>{dispatch(setSaturation(parseInt(val)))}}
+                        disabled={disabled}
+                    />
+                </Box>
+            </Outline>
+            <Outline label="Pathogen Selection">
+                <Stack direction='row' spacing={12} width='85em' style={{justifyContent:'center'}}  >
+                    <RadioGroup value={mode} onChange={(e)=>{setMode(e.target.value)}}>
+                        <Stack direction='row' spacing={6}>
+                            <FormControlLabel value={EditModes.Image}    control={<Radio/>} label="Pan and Zoom the image" />
+                            <FormControlLabel value={EditModes.Pathogen} control={<Radio/>} label="Select Pathogen region" />
+                            <FormControlLabel value={EditModes.Leaf}     control={<Radio/>} label="Select Leaf region" />
+                        </Stack>
+                    </RadioGroup>
+                    <Button 
+                        variant='outlined'
+                        onClick={()=>dispatch(resetVals())}
+                    > 
+                        Reset Selection
+                    </Button>
+                </Stack>
+            </Outline>
             <FullSlider
-                label="Image Selection"
+                label="Image"
                 values={imageList}
                 onChange={(index,val)=>{imageChanges(val)}}
                 disabled={disabled}
             />
-            <FullSlider
-                label="Hue"
-                values={hueArray}
-                defaultIndex={hueDef-minHue}
-                onChange={(index,val)=>{dispatch(setHue(parseInt(val)))}}
-                disabled={disabled}
-            />
-            <FullSlider
-                label="Saturation"
-                values={saturationArray}
-                defaultIndex={satDef-minSat}
-                onChange={(index,val)=>{dispatch(setSaturation(parseInt(val)))}}
-                disabled={disabled}
-            />
-            <Stack direction='row' spacing={10}>
-                <RadioGroup value={mode} onChange={(e)=>{setMode(e.target.value)}}>
-                    <Stack direction='row' spacing={6}>
-                        <FormControlLabel value={EditModes.Image}    control={<Radio/>} label="Pan and Zoom the image" />
-                        <FormControlLabel value={EditModes.Pathogen} control={<Radio/>} label="Select Pathogen region" />
-                        <FormControlLabel value={EditModes.Leaf}     control={<Radio/>} label="Select leaf region" />
-                    </Stack>
-                </RadioGroup>
-                <Button 
-                    variant='outlined'
-                    onClick={()=>dispatch(resetVals())}
-                > 
-                    Reset Selection
-                </Button>
-            </Stack>
-
             <Stack direction='row' spacing={10}>
                 <PreviousPage 
                     page={selectionPath}

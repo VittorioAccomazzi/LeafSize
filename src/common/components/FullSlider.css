@@ -7,11 +7,11 @@
     overflow: hidden;
     white-space: nowrap;
     color: lightgray;
-    min-width: 12em;
-    max-width: 12em;
+    min-width: 6em;
+    max-width: 6em;
 }
 
 .titleLabel {
-    width:8em;
+    width:4em;
     text-align: right;
 }
