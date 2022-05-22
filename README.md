@@ -10,10 +10,12 @@ Try it now at [https://vittorioaccomazzi.github.io/LeafSize/](https://vittorioac
 </p>
 
 ## Workflow
-The steps that the user has to quantify leaf size and pathogen size are the following:
-1.	Selection of the images layout.
+The steps that the user has take to quantify leaf size and pathogen size are the following:
+1.	Selection of the images layout :
+   1. Number of petri dishes in each image : 1 or 4.
+   2. Number of leaves in each petri dish: 1 or 2.
 2. Interactively set the settings for the identification of the leaves and patogen regions in the images as follow. At any point in time you can click on `Preview` to view how the image displayed in the page analyzed:
-   1. Isolate the leaves: this is accomplished setting two sliders for `hue` and `saturation`:
+   1. Isolate the leaves: this is accomplished setting two sliders for `Hue` and `Saturation`:
       1. Reducing the hue value will _increase_ the area of the leaves.
       2. Reducing the saturation value will _descrease_ the area of the leaves.
    2. Isolate the pathogen region:
@@ -22,7 +24,7 @@ The steps that the user has to quantify leaf size and pathogen size are the foll
 3. Apply the settings to _all the image_ and review them:
    1. Delete the ones which are not correct (for instance the leaf is not entirely identified or the pathogen region is too small)
    2. Press `Accept` and finalize the images which are properly processed.
-4.	Download the values of the images `Accepted`
+4.	Download the values of the images Accepted.
 
 The key is that _you can iterate steps 2 and 3 multiple times_. This will allows you to process all the imags with different settings if necessary. For each leaf there the system assumes at most 1 pathogen region.
 
