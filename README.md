@@ -12,19 +12,21 @@ Try it now at [https://vittorioaccomazzi.github.io/LeafSize/](https://vittorioac
 ## Workflow
 The steps that the user has to quantify leaf size and pathogen size are the following:
 1.	Selection of the images layout.
-1. Interactively the settings as follow. At any point in time you can click on `Preview` to view how the image displayed in the page will be analyzed:
-   1. Isolating the leaves: this is accomplished setting two threshold for `hue` and `saturation`:
+1. Interactively set the settings for the identification of the leaves and patogen regions in the images as follow. At any point in time you can click on `Preview` to view how the image displayed in the page analyzed:
+   1. Isolate the leaves: this is accomplished setting two sliders for `hue` and `saturation`:
       1. Reducing the hue value will _increase_ the area of the leaves.
       2. Reducing the saturation value will _descrease_ the area of the leaves.
-   2. Isolating the pathogen region:
-      1. click on `Select Pathogen region` and then click on the images over the pathogen region. You don't have to be accurate, just select a large part of it, to indicate which colour in the image belong to the pathogen
-      2. if the area for the pathogen includes also region of the leaf, click on `Select Leaf region` and then click on the region which was erroneously included. 
-3.	Apply the settings to _all the image_ and review them:
+   2. Isolate the pathogen region:
+      1. click on `Select Pathogen region` and then paint on the images over the pathogen region. You don't have to be accurate, just select a large part of it, to indicate which colour in the image belong to the pathogen
+      2. if in the preview you see that the area for the pathogen includes also region of the leaf, click on `Select Leaf region` and then click on the region which was erroneously included. 
+3.Apply the settings to _all the image_ and review them:
    3.1. Delete the ones which are not correct (for instance the leaf is not entirely identified or the pathogen region is too small)
    3.2. Press `Accept` and finalize the images which are properly processed.
 4.	Download the values of the images `Accepted`
 
-The key is that _you can iterate steps 2 and 3 multiple times_. This will allows you to process all the imags with different settings if necessary.  [This video](https://www.youtube.com/watch?v=_5F8r_aCtMU) shows the entire workflow.
+The key is that _you can iterate steps 2 and 3 multiple times_. This will allows you to process all the imags with different settings if necessary. For each leaf there the system assumes at most 1 pathogen region.
+
+[This video](https://www.youtube.com/watch?v=_5F8r_aCtMU) shows the entire workflow.
 
 ### Privacy
 Your images will **not** be copied nor uploaded to a server, all the processing occurs locally on your computer inside your browser.
