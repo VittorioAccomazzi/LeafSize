@@ -7,11 +7,12 @@ import ImageLoader from "../../workers/foreground/ImageLoader";
 import Pacer from '../../common/utils/Pacer'
 import { useAppSelector, useAutomaticRedirect, useImagesToProcess } from "../../app/hooks";
 import { selectFiles, selectNumDishes, selectNumLeafs } from "../selection/selectionSlice";
-import LeafSeg from "../../workers/background/LeafSeg";
-import { selectHue, selectSaturation } from "./settingSlice";
+import LeafSeg, {BackgroundType} from "../../workers/background/LeafSeg";
+import { selectHue, selectLeafVals, selectPathVals, selectSaturation } from "./settingSlice";
 import useShiftKey from "../../common/useLib/useKeyPress";
 import { imageSize } from "../../app/const";
 import usePageTracking from "../../common/useLib/usePageTracking";
+import useEditMode from "./useEditMode";
 
 
 const delay = 200; // ms to wait for the user to complete the action prior to load the image
@@ -22,16 +23,20 @@ export default function Settings() {
     const huethr = useAppSelector(selectHue);
     const satThr = useAppSelector(selectSaturation);
     const numLeaf= useAppSelector(selectNumLeafs);
+    const leafVals = useAppSelector(selectLeafVals);
+    const pathVals = useAppSelector(selectPathVals);
     const imgLoader= useMemo<ImageLoader>(()=>new ImageLoader(fileList, numDishes, imageSize),[fileList, numDishes]);
     const iNumPacer= useMemo<Pacer>(()=>new Pacer(delay),[]);
-    const [imageData,setImageData] = useState<ImageData|null>(null);
-    const [orgData, setOrgData]    = useState<ImageData|null>(null);
+    const thrsPacer= useMemo<Pacer>(()=>new Pacer(delay),[]);
+    const [imgData, setImgData] = useState<ImageData|null>(null);
+    const [orgData, setOrgData] = useState<ImageData|null>(null);
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const imagesToProcess = useImagesToProcess(imgLoader.List); 
     const shiftPress= useShiftKey();
+    const editMode = useEditMode();
 
 
-    // if nothing selected redirect on seletion page.
+    // if nothing selected redirect on selection page.
     useAutomaticRedirect(fileList);
 
     // track usage
@@ -41,7 +46,7 @@ export default function Settings() {
         const index = imgLoader.List.findIndex(v => v===imageName);
         if( index >=0 ){
             const { imgData } = await imgLoader.getImage(index);
-            setImageData(imgData);
+            setImgData(imgData);
             setOrgData(imgData);
         }
     }
@@ -50,15 +55,15 @@ export default function Settings() {
         if( orgData ){
             setIsLoading(true);
             const newImage = new ImageData( new Uint8ClampedArray(orgData.data), orgData.width, orgData.height);
-            LeafSeg.Process(newImage, huethr, satThr, numLeaf );
-            setImageData( newImage);
+            LeafSeg.Process(newImage, huethr, satThr, numLeaf, leafVals, pathVals, BackgroundType.Transparent );
+            setImgData(newImage);
             setIsLoading(false);
         }
     }
 
     useEffect(()=>{
-        if( shiftPress ) process();
-    },[orgData])
+        if( shiftPress ) thrsPacer.delayAction(()=>process());
+    },[orgData, huethr, satThr])
 
     return (
         <Box className="fullPage" >
@@ -69,11 +74,14 @@ export default function Settings() {
                     imageChange={(index)=> iNumPacer.delayAction(()=>loadData(index))} 
                     process={process} 
                     isAutoProc ={shiftPress}
+                    editModeState={editMode}
                 />
             </Box>
             <Box className={css.bottomFrame}>
                 <DisplayPart
-                    imageData={imageData}
+                    orgData={orgData}
+                    ovlData={imgData}
+                    editMode={editMode}
                 />
             </Box>
         </Box>

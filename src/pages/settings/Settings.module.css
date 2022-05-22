@@ -11,12 +11,12 @@
     top:0px;
     left: 0px;
     right: 0px;
-    height: 6em;
+    height: 10em;
 }
 
 .bottomFrame {
     position:  absolute;
-    top:7em;
+    top:11em;
     left:0px;
     right:0px;
     bottom: 0px;

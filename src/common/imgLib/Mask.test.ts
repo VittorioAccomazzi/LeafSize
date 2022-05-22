@@ -5,9 +5,12 @@ import CanvasUtils from '../utils/CanvasUtils';
 import hash, { loadCanvas, testImage, nodeCanvasImageDataAllocator } from '../utils/TestUtils';
 import ColourModels from './ColourModels';
 import BoundingBox from './BoundingBox';
+import {ImageData} from 'canvas'
 
 
 describe('Mask', ()=>{
+
+    BoundingBox.SetImageDataAllocator(nodeCanvasImageDataAllocator);
 
     test('shall create an empty mask', ()=>{
         const width = 8;
@@ -311,7 +314,7 @@ describe('Mask', ()=>{
     test('shall return the connected components',async()=>{
         const canvas = await loadCanvas(testImage,12);
         const imgData= CanvasUtils.GetImageData(canvas);
-        const {hue, sat } = ColourModels.toHSV(imgData);
+        const { sat } = ColourModels.toHSV(imgData);
         const mask = new Mask(sat.width, sat.height);
         const maskPixels = mask.imagePixels;
         const thr = 80/255;
@@ -334,7 +337,6 @@ describe('Mask', ()=>{
     })
 
     test('Shall determine the bounding box', async()=>{
-        BoundingBox.SetImageDataAllocator(nodeCanvasImageDataAllocator);
         const canvas = await loadCanvas(testImage,12);
         const imgData= CanvasUtils.GetImageData(canvas);
         const { sat } = ColourModels.toHSV(imgData);
@@ -359,6 +361,67 @@ describe('Mask', ()=>{
         CanvasUtils.PutImageData(canvas,crpData!);
         const hsh2 = await hash(canvas,'bounding box cropped');
         expect(hsh2).toMatchSnapshot();
+    })
+
+    test('Shall overlay the mask on the image with offset', async ()=>{
+        const canvas = await loadCanvas(testImage,8);
+        const imgData= CanvasUtils.GetImageData(canvas);
+        const cpyData = new ImageData(new Uint8ClampedArray(imgData.data), imgData.width, imgData.height);
+        const { hue } = ColourModels.toHSV(imgData);
+        const mask = new Mask(hue.width, hue.height);
+        const maskPixels = mask.imagePixels;
+        const thr = 60*360/255;
+        hue.imagePixels.forEach((v,i)=>{ maskPixels[i] = v < thr; })
+        mask.Overlay(imgData, {r:255, g:255, b:0, a:128});
+        CanvasUtils.PutImageData(canvas, imgData);
+        const hsh1 = await hash(canvas,'overlay full');
+        expect(hsh1).toMatchSnapshot();
+        const bbox = mask.Boundaries();
+        const crpData = BoundingBox.CropImage(bbox, cpyData);
+        expect( crpData ).toBeTruthy();
+        expect( crpData?.width ).toBeLessThan(imgData.width);
+        expect( crpData?.height ).toBeLessThan(imgData.height);
+        expect( bbox.ulc.x ).toBeGreaterThan(0);
+        expect( bbox.ulc.y ).toBeGreaterThan(0);
+        const { hue : crpH } = ColourModels.toHSV(crpData!);
+        const crpMask = new Mask(crpData!.width, crpData!.height);
+        const crpPixel= crpMask.imagePixels;
+        crpH.imagePixels.forEach((v,i)=>crpPixel[i]= v<thr);
+        crpMask.Overlay(crpData!, {r:255, g:255, b:0, a:128});
+        CanvasUtils.PutImageData(canvas, crpData!);
+        const hsh2 = await hash(canvas, 'overlay partial');
+        expect( hsh2 ).toMatchSnapshot();
+
+        // overlay with offset
+        crpMask.Overlay(cpyData, {r:255, g:255, b:0, a:128}, bbox.ulc );
+
+        // it shall be the same of the original one.
+        let numDiff = cpyData.data.reduce((num, v, i )=>num + (v===imgData.data[i] ? 0 : 1),0);
+        expect(numDiff).toBe(0);
+
+    })
+
+    test('Shall throw when overlay settings are not correct', ()=>{
+        const mask = new Mask(10,12);
+        const imgData = new ImageData(12,18);
+        const col = { r:0, g:255, b:255, a:100};
+
+        expect(()=>{
+            mask.Overlay(imgData,col);
+        }).toThrow()
+
+        expect(()=>{
+            mask.Overlay(imgData,col, {x:-2,y:8});
+        }).toThrow()
+
+        expect(()=>{
+            mask.Overlay(imgData,col, {x:4,y:2});
+        }).toThrow()
+
+        expect(()=>{
+            mask.Overlay(imgData,col, {x:2,y:2});
+        }).not.toThrow()
+
     })
 })
 

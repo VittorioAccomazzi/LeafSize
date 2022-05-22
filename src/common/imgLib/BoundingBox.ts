@@ -1,3 +1,4 @@
+import Mask from "./Mask";
 import { Bbox, Point } from "./Types";
 import { ImageDataAllocator, imageDataAllocator } from "./Types";
 
@@ -22,6 +23,14 @@ export default class BoundingBox  {
         return BoundingBox.FromValues(pt1.x, pt1.y, pt2.x, pt2.y);
     }
 
+    /**
+     * generates a boundin box from point
+     * @param x1  x point 1
+     * @param y1  y point 1
+     * @param x2  x point 2
+     * @param y2  y point 2
+     * @returns 
+     */
     static FromValues( x1 : number, y1 : number, x2 : number, y2 : number ) : Bbox {
         const xmin = Math.min(x1, x2);
         const xmax = Math.max(x1, x2);
@@ -39,6 +48,18 @@ export default class BoundingBox  {
         }
     }
 
+    /**
+     * Bounding box of the image.
+     * @param imageData 
+     * @returns 
+     */
+    static FromImage(imageData : {width:number, height:number }) : Bbox {
+        return {
+            ulc : { x:0, y:0 },
+            size: { width:imageData.width, height:imageData.height}
+        }
+    }
+    
     static get Empty() : Bbox {
         return {
             ulc : {x:0, y:0},
@@ -50,6 +71,11 @@ export default class BoundingBox  {
         return bbox.size.width <=0 || bbox.size.height <= 0;
     }
 
+    /**
+     * Merge (union) a list of bounding boxes
+     * @param boxes list of bounding boxes
+     * @returns 
+     */
     static Merge( boxes : Bbox[] ) : Bbox {
         let box =  BoundingBox.Empty;
         if( boxes.length > 0 ){
@@ -75,6 +101,11 @@ export default class BoundingBox  {
         }
     }
 
+    /**
+     * Intersect a list of bounding boxes.
+     * @param boxes list of bouind boxes to intersect.
+     * @returns 
+     */
     static Intersect(boxes : Bbox[] ) : Bbox {
         let box =  BoundingBox.Empty;
         if( boxes.length > 0 ){
@@ -96,19 +127,21 @@ export default class BoundingBox  {
         return box;
     }
 
-    static CropImage(bbox : Bbox, imageData : ImageData ) : ImageData | null {
-        const imageBox = {
-            ulc : {x:0, y:0},
-            size: {width:imageData.width, height:imageData.height}
-        }
-        
+    /**
+     * 
+     * @param bbox bouding box
+     * @param imageData  image data to crop
+     * @returns cropped image.
+     */
+    static CropImage(bbox : Bbox, imageData : ImageData ) : ImageData  {
+        const imageBox = BoundingBox.FromImage(imageData)
         const int = BoundingBox.Intersect([bbox, imageBox]);
-        let res : ImageData | null = null;
+        const width = Math.max(int.size.width,0)
+        const height= Math.max(int.size.height,0)
+        const dst = new Uint8ClampedArray(width*height*4);
+        let res : ImageData = BoundingBox.allocator(dst, width, height);
 
-        if( !BoundingBox.IsEmpty(int) ){
-            const width = int.size.width;
-            const height= int.size.height;
-            const dst = new Uint8ClampedArray(width*height*4);
+        if( width * height > 0 ){
             const src = imageData.data;
             let dstPt = 0;
 
@@ -121,11 +154,35 @@ export default class BoundingBox  {
                     dst[dstPt++] = src[srcPt++];
                 }
             }
-
-            res = BoundingBox.allocator(dst, width, height);
         }
 
         return res;
+    }
+
+    /**
+     * crop the input mask on the bouding box provided.
+     * @param bbox 
+     * @param inpMask 
+     * @returns 
+     */
+    static CropMask(bbox : Bbox, inpMask : Mask ) : Mask {
+        const imageBox = BoundingBox.FromImage(inpMask);
+        const int = BoundingBox.Intersect([bbox, imageBox]);
+        const width = Math.max(int.size.width,0)
+        const height= Math.max(int.size.height,0)
+        const outMask = new Mask(width, height);
+        if( width * height >0 ){
+            const inpWidth = inpMask.width;
+            const inpPixels= inpMask.imagePixels;
+            const outPixels = outMask.imagePixels;
+            let outPtr = 0;
+            for( let y=int.ulc.y; y<int.ulc.y+int.size.height; y++ ){
+                let inPtr = y * inpWidth + int.ulc.x;
+                let inEnd = inPtr+int.size.width;
+                while(inPtr<inEnd) outPixels[outPtr++]=inpPixels[inPtr++];
+            }
+        }
+        return outMask;
     }
 
 }

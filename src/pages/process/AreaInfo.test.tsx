@@ -1,12 +1,15 @@
 import AreaInfo from "./AreaInfo";
 import { render } from '@testing-library/react';
+import { LeafArea } from "./ProcessSlice";
 
 describe('AreaInfo', ()=>{
 
     test('it shall display the area provied', ()=>{
         const val1 = 100;
+        const pat1 = 20;
         const val2 = 200;
-        const areas =[val1,val2];
+        const pat2 = 108;
+        const areas =[{leaf:val1, path:pat1}, {leaf:val2, path:pat2}];
         const {getByText} = render( 
             <AreaInfo areas = {areas} />
         );
@@ -17,7 +20,7 @@ describe('AreaInfo', ()=>{
 
     test('it shall display one area', ()=>{
         const val1 = 100;
-        const areas =[val1];
+        const areas =[{leaf:val1, path:0}];
         const {getByText} = render( 
             <AreaInfo areas = {areas} />
         );
@@ -26,7 +29,7 @@ describe('AreaInfo', ()=>{
     })
 
     test('it shall display no areas', ()=>{
-        const areas :number [] =[];
+        const areas :LeafArea [] =[];
         const {getByText} = render( 
             <AreaInfo areas = {areas} />
         );

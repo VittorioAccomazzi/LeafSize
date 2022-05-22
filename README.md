@@ -1,22 +1,36 @@
 
 
 # Application
-Leaf Size is a Web application for the measurement size of the leaves in your images. The application is specifically designed for high throughput: allow to quantify as many images as possible in the least amount of time.
+Leaf Size is a Web application for the measurement size of the leaves and pathogen in your images. The application is specifically designed for high throughput: allow to quantify as many images as possible in the least amount of time.
 
-The application is now live at [https://vittorioaccomazzi.github.io/LeafSize/](https://vittorioaccomazzi.github.io/LeafSize/)
+Try it now at [https://vittorioaccomazzi.github.io/LeafSize/](https://vittorioaccomazzi.github.io/LeafSize/)
 
 <p align="center">
     <img src="src/assets/workflow.gif" />
 </p>
 
 ## Workflow
-The application walk you through the steps necessary for the measurement:
-1.	Selection of the image layout
-2.	Settings for isolating the leaves (hue and saturation thresholds)
-3.	Review of the result and removal of the ones which are not accurate, and accept the rest.
-4.	Download the values as excel file.
+The steps that the user has take to quantify leaf size and pathogen size are the following:
+1. Selection of the images layout:
+   1. Number of petri dishes in each image: 1 or 4.
+   2. Number of leaves in each petri dish: 1 or 2.
+2. Interactively set the settings for the identification of the leaves and patogen regions in the images as follow. At any point in time you can click on `Preview` to view how the image displayed in the page analyzed:
+   1. Isolate the leaves: this is accomplished setting two sliders for `Hue` and `Saturation`:
+      1. Reducing the hue value will _increase_ the area of the leaves.
+      2. Reducing the saturation value will _descrease_ the area of the leaves.
+   2. Isolate the pathogen region:
+      1. click on `Select Pathogen region` and then paint on the images over the pathogen region. You don't have to be accurate, just select a large part of it, to indicate which colour in the image belong to the pathogen
+      2. if in the preview you see that the area for the pathogen includes also region of the leaf, click on `Select Leaf region` and then click on the region which was erroneously included. 
+3. Apply the settings to _all the image_ and review them:
+   1. Delete the ones which are not correct (for instance the leaf is not entirely identified or the pathogen region is too small)
+   2. Press `Accept` and finalize the images which are properly processed.
+4.	Download the values of the images Accepted.
 
-You can iterate thought these steps 2 and 3 as many times as necessary and accept a few images at the time. So, you’ll be able to accommodate for situation in which a single setting is not able to work satisfactory across all the images. [This video](https://www.youtube.com/watch?v=_5F8r_aCtMU) shows the entire workflow.
+The key is that _you can iterate steps 2 and 3 multiple times_. This will allow you to process all the images with different settings if necessary. Please note: 
+* For each leaf the system assumes at most 1 pathogen region.
+* you don't have to `Accept` all the images. For instance if some images do not have a leaf or are blurry, don't accept them and just download the results, from which they are excluded.
+
+[This video](https://youtu.be/FS95DNnsQX4) (3min) shows the entire workflow.
 
 ### Privacy
 Your images will **not** be copied nor uploaded to a server, all the processing occurs locally on your computer inside your browser.
@@ -27,7 +41,7 @@ The application assumes that you acquire a large number of images with the leaf,
 For the optimal result please acquire the images as follow:
 -	Uniform illumination across the image
 -	Constant white background on the images.
--	Make sure that the leaves are not touching each other.
+-	The leaves are not touching each other. if this happen they are considered a single leaf.
 
 <p align="center">
     <img src="src/assets/SampleImage.jpg" width="256" />

@@ -1,4 +1,5 @@
 
+// see https://javascript.plainenglish.io/using-decorators-in-javascript-e80674e4c6fa
 
 //
 // Method decorators

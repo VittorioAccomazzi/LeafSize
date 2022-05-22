@@ -1,9 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
+export interface LeafArea {
+    leaf : number, 
+    path : number
+}
+
 export interface ImageFinalized {
     name : string,
-    areas: number []
+    areas: LeafArea []
 }
 
 export interface FinalizedState {

@@ -5,7 +5,7 @@ import { imageSize, processingPath as processPath } from "../../app/const";
 import { useAppSelector, useAutomaticRedirect, useImagesToProcess } from "../../app/hooks";
 import { useMemo } from "react";
 import ImageLoader from "../../workers/foreground/ImageLoader";
-import { ImageFinalized, selectFinalized } from "../process/ProcessSlice";
+import { ImageFinalized, LeafArea, selectFinalized } from "../process/ProcessSlice";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -46,6 +46,8 @@ export default function Result() {
         GA.event('User','Result', 'Rejected',  imagesToProcess.length);
     }
     const leafTableHeader = numLeaf > 1 ?'Leaf 1' : 'Leaf';
+    const pathTableHeader = numLeaf > 1 ? 'Pathogen 1' : 'Pathogen'; 
+    const tableContainer  = numLeaf > 1 ? css.tableContainer2 : css.tableContainer1; 
     return (
         <Box className={css.fullPage} >
             <Stack direction='row' alignItems='center' spacing={6} className={css.topFrame}>
@@ -55,13 +57,15 @@ export default function Result() {
                 <Button variant='outlined' onClick={onDownload}><DownloadIcon/>Download</Button>
             </Stack>
             <Box className={css.bottomFrame}>
-                <TableContainer component={Paper} className={css.tableContainer} elevation={8}>
+                <TableContainer component={Paper} className={tableContainer} elevation={8}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
                                 <TableCell sx={{fontWeight:'bold'}}>Image Name</TableCell>
                                 <TableCell align='right' sx={{fontWeight:'bold'}}>{leafTableHeader} (pixels<sup>2</sup>)</TableCell>
+                                <TableCell align='right' sx={{fontWeight:'bold'}}>{pathTableHeader} (pixels<sup>2</sup>)</TableCell>
                                 { ( numLeaf > 1 ) && <TableCell align='right' sx={{fontWeight:'bold'}}>Leaf 2 (pixels<sup>2</sup>)</TableCell>}
+                                { ( numLeaf > 1 ) && <TableCell align='right' sx={{fontWeight:'bold'}}>Pathogen 2 (pixels<sup>2</sup>)</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -69,8 +73,10 @@ export default function Result() {
                                 imgFinalized.map(({name,areas})=>
                                     <TableRow key = {name}>
                                         <TableCell align='left'> {name}</TableCell>
-                                        <TableCell align='right'>{areas.length > 0  ? areas[0] : 0 }</TableCell>
-                                        { ( numLeaf > 1 ) && <TableCell align='right'>{areas.length > 1  ? areas[1] : 0 }</TableCell>}
+                                        <TableCell align='right'>{areas.length > 0  ? areas[0].leaf : 0 }</TableCell>
+                                        <TableCell align='right'>{areas.length > 0  ? areas[0].path : 0 }</TableCell>
+                                        { ( numLeaf > 1 ) && <TableCell align='right'>{areas.length > 1  ? areas[1].leaf : 0 }</TableCell>}
+                                        { ( numLeaf > 1 ) && <TableCell align='right'>{areas.length > 1  ? areas[1].path : 0 }</TableCell>}
                                     </TableRow>
                                 )
                             }
@@ -83,11 +89,11 @@ export default function Result() {
 }
 
 function generateContent( results : ImageFinalized [], nLeafs : number ) : string {
-    const value = (array : number[], index : number ) => array.length > index ? array[index] : 0;
-    let header = "Image Name," + ( nLeafs === 1 ? "Leaf" : "Leaf 1, Leaf 2") +"\n";
+    const value = (array : LeafArea[], index : number ) => array.length > index ? `${array[index].leaf},${array[index].path}` : `0,0`;
+    let header = "Image Name," + ( nLeafs === 1 ? "Leaf, Pathogen" : "Leaf 1, Pathogen 1, Leaf 2, Pathogen 2") +"\n";
     let text ="";
     results.forEach(({name, areas})=>{
-        text += name +","+ value (areas, 0)
+        text += name +","+ value(areas, 0)
         if( nLeafs >1 ) text += ","+value(areas,1)
         text += "\n";
     })
