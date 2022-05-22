@@ -89,7 +89,7 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
                     onClick={process}
                 >
                     { isAutoProc ? '⚡️ ': '' }
-                    Process
+                    Preview
                 </Button>
                 <NextPage 
                     page={processingPath} 
