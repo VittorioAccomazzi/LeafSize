@@ -63,7 +63,7 @@ export default function Settings() {
 
     useEffect(()=>{
         if( shiftPress ) thrsPacer.delayAction(()=>process());
-    },[orgData, huethr, satThr])
+    },[orgData, huethr, satThr]); // eslint-disable-line  react-hooks/exhaustive-deps
 
     return (
         <Box className="fullPage" >

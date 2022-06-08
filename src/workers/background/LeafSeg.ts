@@ -89,7 +89,7 @@ export default class LeafSeg {
         g /= 255;
         b /= 255;
         
-       let {h,s,v} = ColourModels.Rgb2Hsv(r,g,b);
+       let {h,s} = ColourModels.Rgb2Hsv(r,g,b);
 
        h = h|0;
        s = (s*255)|0
@@ -105,7 +105,7 @@ export default class LeafSeg {
         g /= 255;
         b /= 255;
         
-       let {l,a,b:bb} = ColourModels.Rgb2Lab(r,g,b);
+       let {a,b:bb} = ColourModels.Rgb2Lab(r,g,b);
 
        a  = (a*255/256)|0;
        bb = (bb*255/256)|0; 

@@ -1,7 +1,7 @@
 import { MutableRefObject, useEffect, useRef } from "react";
 import ColourModels from "../../../common/imgLib/ColourModels";
 import { Point } from "../../../common/imgLib/Types";
-import useMouse, { Point2DOM, umButtonPress, umDeviceTypes, umMouseEvent } from "../../../common/useLib/useMouse";
+import useMouse, { Point2DOM, umDeviceTypes, umMouseEvent } from "../../../common/useLib/useMouse";
 
 
 interface AutoZoomProp {

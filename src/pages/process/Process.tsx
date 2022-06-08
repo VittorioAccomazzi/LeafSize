@@ -42,7 +42,7 @@ export default function Process() {
             numLeaf,
             [...leafVals],
             [...pathVals]
-         ),[])
+         ),[]) // eslint-disable-line  react-hooks/exhaustive-deps -- run only once.
 
         // if nothing selected redirect on seletion page.
         useAutomaticRedirect(fileList);
@@ -62,7 +62,7 @@ export default function Process() {
                 GA.event('Performances','Processing', 'Images processed', imagesToProcess.length);
                 GA.event('Performances','Processing', 'Time per image',elaps/imagesToProcess.length);
              }
-         },[perc, start])
+         },[perc, start]); // eslint-disable-line  react-hooks/exhaustive-deps
 
          // images which segmentation has been rejected.
          const onDelete = (name:string)=>{

@@ -14,7 +14,7 @@ export const useAutomaticRedirect = (files : FileSystemFileHandle []|null ) => {
     const navigate = useNavigate();
     useEffect(()=> {
         if(!(files?.length)) navigate(root)
-    }, []) 
+    }, []) // eslint-disable-line  react-hooks/exhaustive-deps -- shall ran only once.
 }
 
 
@@ -23,6 +23,6 @@ export const useAutomaticRedirect = (files : FileSystemFileHandle []|null ) => {
 const searchElement = ( list : ImageFinalized [], name : string ) : boolean => list.findIndex(el=>el.name===name) >= 0
 export const  useImagesToProcess = ( imageList : string [] ) => {
     const imgFinalized = useAppSelector(selectFinalized);
-    const imagesToProcess = useMemo(()=>imageList.filter( v => !searchElement(imgFinalized,v) ) , []); // on purpose this shall be computed only once.
+    const imagesToProcess = useMemo(()=>imageList.filter( v => !searchElement(imgFinalized,v) ) , []); // eslint-disable-line  react-hooks/exhaustive-deps -- on purpose this shall be computed only once.
     return imagesToProcess;
 }

@@ -45,7 +45,7 @@ export default function Editing ({inpData, ovlData, outDiv, style, matrix, isAct
             const values = handleMouse(mouseEvent, inpData, ctx.current, matrix, radius, color);
             if( values.length > 0 ) dispatch(addValues(values));
         }
-    },[event, isActive, ctx])
+    },[event, isActive, ctx]); // eslint-disable-line  react-hooks/exhaustive-deps
 
     return (
         <canvas ref={canvas} style={style}/>

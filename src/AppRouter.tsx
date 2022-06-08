@@ -5,7 +5,7 @@ import Result from "./pages/result/Result";
 import {Routes, Route, MemoryRouter} from "react-router-dom";
 import { root } from "./app/const";
 
-export default function () {
+export default function AppRouter () {
     return (
         <MemoryRouter   initialEntries={[root]} initialIndex={1}>
             <Routes>

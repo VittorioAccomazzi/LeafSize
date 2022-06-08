@@ -21,7 +21,7 @@ export default function FullSlider( { label, values, disabled, defaultIndex =0, 
       };
 
     // invoke callback when the index changes
-    useEffect(()=>{onChanged(imageNum,values[imageNum])},[imageNum]);
+    useEffect(()=>{onChanged(imageNum,values[imageNum])},[imageNum]); // eslint-disable-line  react-hooks/exhaustive-deps
 
     // in case the value array changes, reset the index
     useEffect(()=>setImageNum(0),[setImageNum,values]);

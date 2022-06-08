@@ -63,7 +63,7 @@ export default class ColourModels {
             let r=data[ptr++];
             let g=data[ptr++];
             let b=data[ptr++];
-            let a=data[ptr++]; 
+            ptr++; // alpha channel
             let hsv = this.Rgb2Hsv(r/255, g/255, b/255);
             hPixels[p]=hsv.h;
             sPixels[p]=hsv.s;
@@ -205,7 +205,7 @@ export default class ColourModels {
             let r=data[ptr++];
             let g=data[ptr++];
             let b=data[ptr++];
-            let a=data[ptr++];
+            ptr++; // alpha channel
             let lab = this.Rgb2Lab(r/255, g/255, b/255);
             lPixels[p]=lab.l;
             aPixels[p]=lab.a;

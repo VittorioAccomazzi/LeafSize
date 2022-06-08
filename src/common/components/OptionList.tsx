@@ -32,7 +32,7 @@ function HorizontalAlign( {imgSrc, label, selected, onClick }: HorizontalAlignPr
     return (
         <Stack spacing={1} direction="row" alignItems="center" paddingRight={2}>
             <Radio checked={selected} onClick={onClick}/> 
-            <img src={imgSrc} height="32px" />
+            <img src={imgSrc} height="32px" alt=""/>
             <FormLabel>{label}</FormLabel>
         </Stack>
     )

@@ -38,7 +38,7 @@ export default function ProcessResult ( { name, imageProcessor, onDelete, onResu
                     onResult(name, areas);
                 }
             })
-    },[imageProcessor])
+    },[imageProcessor]) // eslint-disable-line  react-hooks/exhaustive-deps
 
     const onClick = ()=>{
         onDelete(name);
