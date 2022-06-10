@@ -68,7 +68,7 @@ If you like to contribuite to the application, clone the repository and create a
 - In order to dump the images during testing for visual inspection, set the enviroment variable `DUMP` to `true` and then run the test on the shell using the normal npm command (`npm run test`)
 
 ### Testing PWA
-In order to test the PWA implementation you need to use the production build, so do not use `start` npm command but `serve-prod` notice that:
+In order to test the PWA implementation you need to use the production build, so do not use `start` npm command but `serve-prod`. Notice that:
 -  There is not hot reload : when you make a change you need to compile the application, and refresh the browser.
 -  When modifyng the service workers implementation make sure to completly clean the version which Chrome has stored `Developer Tools`→ `Application` → press `Clear Side Data` and the reload the page.
 
