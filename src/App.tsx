@@ -1,6 +1,7 @@
 import './App.css';
 import AppRouter from './AppRouter';
-import AppMain from './AppMain'
+import AppMain from './AppMain';
+import SwNotification from './common/components/SwNotification';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
             <AppRouter/>
         </AppMain>
       </header>
+      <SwNotification/>
     </div>
   );
 }

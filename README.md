@@ -30,10 +30,13 @@ The key is that _you can iterate steps 2 and 3 multiple times_. This will allow 
 * For each leaf the system assumes at most 1 pathogen region.
 * you don't have to `Accept` all the images. For instance if some images do not have a leaf or are blurry, don't accept them and just download the results, from which they are excluded.
 
+You can install the application locally on your laptop using the download button in the URL line, this will allow you to run the application also offline, when you are not connected to the internet.
+
 [This video](https://youtu.be/FS95DNnsQX4) (3min) shows the entire workflow.
 
 ### Privacy
 Your images will **not** be copied nor uploaded to a server, all the processing occurs locally on your computer inside your browser.
+
 
 ## Input Images
 The application assumes that you acquire a large number of images with the leaf, each image shall have 1 or 4 petri dishes and the leaf must be places on the dishes.  The background (table) shall be white, and the lighting uniform. See the image below as example.
@@ -48,13 +51,14 @@ For the optimal result please acquire the images as follow:
 </p>
 
 ## Output
-The application will report the size of each leaf in pixels. You can calibrate the image simply placing a rule in the image, and so convert the values in squared centimeters. You will be able to review the values on the browser and download a csv file for further elaboration with excel.
+The application will report the size of each leaf and pathogen in pixels. You can calibrate the image simply placing a rule in the image, and so convert the values in squared centimeters. You will be able to review the values on the browser and download a csv file for further elaboration with excel.
 
 # Technical
 The application is written with react and leverages several new and experimental features available in Chrome :
 -	[Background workers](https://www.html5rocks.com/en/tutorials/workers/basics/)
 -	[File System Access API](https://web.dev/file-system-access/)
 -	[Offscreen Canvas](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
+-  [Progressive Web App (PWA)](https://web.dev/progressive-web-apps/?gclid=CjwKCAjwtIaVBhBkEiwAsr7-c51o0VVCQDgSlFYPC9NOkoKixjUmPn8vhoVWkMPxXHBkkN7jxBuTIBoCa0UQAvD_BwE)
 
 ## Contributing
 If you like to contribuite to the application, clone the repository and create a pull request.
@@ -62,6 +66,11 @@ If you like to contribuite to the application, clone the repository and create a
 ## Testing
 - In order to run the test you'll need to install [node-canvas](https://github.com/Automattic/node-canvas) which details can be found [here](https://github.com/Automattic/node-canvas/wiki/Installation:-Mac-OS-X). In short for macOS you need to run the following `brew install pkg-config cairo pango libpng jpeg giflib librsvg` otherwise the installation of `node-canvas` will fail.
 - In order to dump the images during testing for visual inspection, set the enviroment variable `DUMP` to `true` and then run the test on the shell using the normal npm command (`npm run test`)
+
+### Testing PWA
+In order to test the PWA implementation you need to use the production build, so do not use `start` npm command but `serve-prod` notice that:
+-  There is not hot reload : when you make a change you need to compile the application, and refresh the browser.
+-  When modifyng the service workers implementation make sure to completly clean the version which Chrome has stored `Developer Tools`→ `Application` → press `Clear Side Data` and the reload the page.
 
 ## Browser Requirements
 The application API which are not part of the HTML standard (yet) and are supported on Chrome only. So it will not run in any other browser. 

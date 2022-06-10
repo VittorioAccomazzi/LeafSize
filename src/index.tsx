@@ -8,6 +8,7 @@ import * as serviceWorker from './serviceWorker';
 import gitInfo from './tools/gitInfo.json';
 import { GAUID } from './app/const';
 import GA from './common/utils/GA'
+import { onUpdate, onSuccess } from './common/components/SwNotification';
 
 
 const main = async ()=>{
@@ -28,4 +29,4 @@ main();
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register( {onSuccess, onUpdate});

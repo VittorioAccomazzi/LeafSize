@@ -56,6 +56,7 @@ Object {
             />
           </span>
           <img
+            alt=""
             height="32px"
             src="dish-1-leaf-1.svg"
           />
@@ -107,6 +108,7 @@ Object {
             />
           </span>
           <img
+            alt=""
             height="32px"
             src="dish-1-leaf-1.svg"
           />
@@ -171,6 +173,7 @@ Object {
           />
         </span>
         <img
+          alt=""
           height="32px"
           src="dish-1-leaf-1.svg"
         />
@@ -222,6 +225,7 @@ Object {
           />
         </span>
         <img
+          alt=""
           height="32px"
           src="dish-1-leaf-1.svg"
         />
