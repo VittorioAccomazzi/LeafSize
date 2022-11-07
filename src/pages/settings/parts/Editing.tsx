@@ -59,6 +59,8 @@ function handleMouse( mouseEvent : umMouseEvent, inData : ImageData | null, ctx 
         const width = ctx.canvas.width;
         const height= ctx.canvas.height;
         let inv = matrix.inverse()
+        inv.m33=1.0; // unfortunately this is necessary because otherwise it will not be recognized as 2D matrix
+        inv.m44=1.0; // see issue #12 https://github.com/VittorioAccomazzi/LeafSize/issues/12 
         let vpPt= Point2DOM(mouseEvent.mousePoint) // point in viewport space
         let imPt= vpPt.matrixTransform(inv) // point in image space.
         const xImg = Math.round(imPt.x)
