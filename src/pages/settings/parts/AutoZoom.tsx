@@ -53,7 +53,9 @@ export default function AutoZoom({inData, outDiv, matrix, radius, color} : AutoZ
 function displayCanvas( settings : DOMMatrix, canvas : HTMLCanvasElement, image : ImageBitmap, inData : ImageData, point : Point, radius : number, color : string) : void {
     canvas.width = canvas.clientWidth
     canvas.height= canvas.clientHeight
-    let inv = settings.inverse()
+    let inv = settings.inverse();
+    inv.m33=1.0; // unfortunately this is necessary because otherwise it will not be recognized as 2D matrix
+    inv.m44=1.0; // see issue #12 https://github.com/VittorioAccomazzi/LeafSize/issues/12 
     let vpPt= Point2DOM(point) // point in viewport space
     let imPt= vpPt.matrixTransform(inv) // point in image space.
     imPt.x = Math.round(imPt.x)
