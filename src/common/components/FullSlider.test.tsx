@@ -122,3 +122,23 @@ test ('Full Slider shall set the default index',async ()=>{
     expect(index).toBe(2);
     expect(value).toBe(array[2]);
 })
+
+test('inverted Slider', async ()=>{
+    const array = ["one", "two", "three", "four"];
+    let index =0;
+    let value ="";
+
+    const wrapper = render( 
+        <FullSlider
+            label='FullSlider Test Label'
+            values={array}
+            disabled={false}
+            defaultIndex={2}
+            inverted={true}
+            onChange={(i,v)=>{index=i; value=v;}}
+        />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+    expect(wrapper.getByText(/three/i)).toBeInTheDocument();
+})

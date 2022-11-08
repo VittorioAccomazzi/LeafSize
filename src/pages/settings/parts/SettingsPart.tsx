@@ -52,6 +52,7 @@ export default function SettingPart({disabled, imageChange: imageChanges, proces
                         defaultIndex={satDef-minSat}
                         onChange={(index,val)=>{dispatch(setSaturation(parseInt(val)))}}
                         disabled={disabled}
+                        inverted={true}
                     />
                 </Box>
             </Outline>

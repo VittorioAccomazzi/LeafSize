@@ -10,9 +10,10 @@ interface FullSliderProp {
     disabled : boolean,
     defaultIndex? : number,
     onChange : (index : number, value : string )=>void 
+    inverted? : boolean
 }
 
-export default function FullSlider( { label, values, disabled, defaultIndex =0, onChange: onChanged } : FullSliderProp){
+export default function FullSlider( { label, values, disabled, defaultIndex =0, onChange: onChanged, inverted = false } : FullSliderProp){
     const [imageNum, setImageNum] = useState<number>(0);
 
     const handleSliderChange = (event: Event, newValue: number | number []) => {
@@ -49,7 +50,8 @@ export default function FullSlider( { label, values, disabled, defaultIndex =0, 
                 disabled={disabled} 
                 onChange={handleSliderChange} 
                 marks 
-                sx={{width:"1024px"}} 
+                sx={{width:"1024px"}}
+                track={inverted ? "inverted" : "normal" } 
             />
             <Button 
                 data-testid="right-click"
