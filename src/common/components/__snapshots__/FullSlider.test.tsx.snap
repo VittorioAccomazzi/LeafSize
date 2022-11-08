@@ -33,7 +33,7 @@ Object {
           </svg>
         </button>
         <span
-          class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root css-19rh4qf-MuiSlider-root"
+          class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root css-13d73tv-MuiSlider-root"
         >
           <span
             class="MuiSlider-rail css-14pt78w-MuiSlider-rail"
@@ -136,7 +136,7 @@ Object {
         </svg>
       </button>
       <span
-        class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root css-19rh4qf-MuiSlider-root"
+        class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root css-13d73tv-MuiSlider-root"
       >
         <span
           class="MuiSlider-rail css-14pt78w-MuiSlider-rail"
@@ -298,7 +298,7 @@ Object {
           />
         </button>
         <span
-          class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root MuiSlider-trackInverted css-19rh4qf-MuiSlider-root"
+          class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root MuiSlider-trackInverted css-13d73tv-MuiSlider-root"
         >
           <span
             class="MuiSlider-rail css-1xst22u-MuiSlider-rail"
@@ -408,7 +408,7 @@ Object {
         />
       </button>
       <span
-        class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root MuiSlider-trackInverted css-19rh4qf-MuiSlider-root"
+        class="MuiSlider-colorPrimary MuiSlider-sizeMedium MuiSlider-root MuiSlider-trackInverted css-13d73tv-MuiSlider-root"
       >
         <span
           class="MuiSlider-rail css-1xst22u-MuiSlider-rail"

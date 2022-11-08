@@ -50,7 +50,7 @@ export default function FullSlider( { label, values, disabled, defaultIndex =0, 
                 disabled={disabled} 
                 onChange={handleSliderChange} 
                 marks 
-                sx={{width:"1024px"}}
+                sx={{width:"1024px", '& .MuiSlider-track': { height:"5px", border:'none'}, '& .MuiSlider-rail': {height:"5px", border:'none'}}}
                 track={inverted ? "inverted" : "normal" } 
             />
             <Button 
