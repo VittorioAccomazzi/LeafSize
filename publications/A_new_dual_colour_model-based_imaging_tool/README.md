@@ -1,8 +1,9 @@
 # Colour-analyzer: A new dual colour model-based imaging tool to quantify plant disease
+**Plants Methods 03 May 2024**
 Mackenzie Eli William Loranger, Winfield Yim, Vittorio Accomazzi, Nadia Morales Lizcano,  Wolfgang Moeder, Keiko Yoshioka
 
 Here below is the data used for Figures 1, 3 and 5 of the paper 
-[Colour-analyzer: A new dual colour model-based imaging tool to quantify plant disease](https://www.biorxiv.org/content/10.1101/2023.08.30.555631v1)
+[Colour-analyzer: A new dual colour model-based imaging tool to quantify plant disease](https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01193-4)
 
 Click to enlarge and get to the raw data.
 
